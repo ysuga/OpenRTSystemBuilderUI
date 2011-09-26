@@ -2,8 +2,8 @@ import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.ysuga.corbanaming.ui.RTSystemTreeView;
 import net.ysuga.rtsbuilder.ui.RTSystemBuilderPanel;
-import net.ysuga.rtsbuilder.ui.RTSystemTreeView;
 import net.ysuga.rtsystem.profile.RTSystemProfile;
 
 /**

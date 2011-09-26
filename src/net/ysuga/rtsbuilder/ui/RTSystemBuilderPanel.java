@@ -22,7 +22,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.xml.parsers.ParserConfigurationException;
 
-import jp.go.aist.rtm.RTC.StateMachine;
 import net.ysuga.rtsbuilder.RTSystemBuilder;
 import net.ysuga.rtsbuilder.ui.shape.ConnectorShape;
 import net.ysuga.rtsbuilder.ui.shape.RTSystemShape;
@@ -30,7 +29,6 @@ import net.ysuga.rtsbuilder.ui.shape.RTSystemShapeBuilder;
 import net.ysuga.rtsystem.profile.Component;
 import net.ysuga.rtsystem.profile.Component.DataPort;
 import net.ysuga.rtsystem.profile.Connector;
-import net.ysuga.rtsystem.profile.RTSProperties;
 import net.ysuga.rtsystem.profile.RTSystemProfile;
 
 import org.xml.sax.SAXException;

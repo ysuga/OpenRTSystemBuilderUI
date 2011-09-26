@@ -1,14 +1,14 @@
 /**
- * NameServiceToolBar.java
+ * RTSTree.java
  *
  * @author Yuki Suga (ysuga.net)
- * @date 2011/08/29
+ * @date 2011/09/02
  * @copyright 2011, ysuga.net allrights reserved.
  *
  */
-package net.ysuga.rtsbuilder.ui;
+package net.ysuga.corbanaming.ui;
 
-import javax.swing.JToolBar;
+import javax.swing.JTree;
 
 /**
  * <div lang="ja">
@@ -20,10 +20,9 @@ import javax.swing.JToolBar;
  * @author ysuga
  *
  */
-public class NameServiceToolBar extends JToolBar {
+public class RTSTree extends JTree {
 
-	
-	public NameServiceToolBar() {
+	public RTSTree() {
 		super();
 	}
 	

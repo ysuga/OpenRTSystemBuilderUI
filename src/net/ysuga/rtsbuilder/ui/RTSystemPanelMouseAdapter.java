@@ -6,6 +6,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import net.ysuga.rtsbuilder.ui.shape.ComponentShape;
 import net.ysuga.rtsbuilder.ui.shape.ConnectorShape;
 import net.ysuga.rtsbuilder.ui.shape.PivottedNamedArrow;
@@ -138,7 +140,10 @@ public class RTSystemPanelMouseAdapter implements MouseListener,
 			for (PortShape portShape : (Set<PortShape>) componentShape.portShapeSet) {
 				if (portShape.contains(arg0.getPoint())) {
 					if (panel.getEditMode() == RTSystemBuilderPanel.EDIT_CONNECTION) {
-
+						ConnectionDialog dialog = new ConnectionDialog(panel.getSelectedDataPort(), portShape.getDataPort());
+						if(dialog.doModal() == JOptionPane.OK_OPTION) {
+							
+						}
 					} else {
 						panel.setSelectedComponent(componentShape
 								.getComponent());
@@ -267,7 +272,7 @@ public class RTSystemPanelMouseAdapter implements MouseListener,
 	}
 
 	public void mouseDragged(MouseEvent arg0) {
-		if (panel.getEditMode() == RTSystemBuilderPanel.EDIT_TRANSITION) {
+		if (panel.getEditMode() == RTSystemBuilderPanel.EDIT_CONNECTION) {
 			// panel.repaint();
 			// panel.setMousePosition(arg0.getPoint());
 
