@@ -27,6 +27,7 @@ import net.ysuga.rtsystem.profile.Component;
 import net.ysuga.rtsystem.profile.Component.DataPort;
 import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.Properties;
+import net.ysuga.rtsystem.profile.ServicePortConnector;
 
 /**
  * <div lang="ja">
@@ -194,8 +195,8 @@ public class ConnectionDialog extends JDialog {
 		return exitOption;
 	}
 
-	public DataPortConnector createConnection() {
-DataPortConnector connector;
+	public DataPortConnector createDataPortConnector() {
+		DataPortConnector connector;
 		if (subscriptionTypeComboBox.getSelectedItem().equals("periodic")) {
 			connector = new DataPortConnector(connectionIdField.getText(),
 					connectionNameField.getText(), dataType,
@@ -211,13 +212,65 @@ DataPortConnector connector;
 					(String) subscriptionTypeComboBox.getSelectedItem());
 		}
 		
-		connector.sourceDataPort = connector.new DataPort(this.sourceDataPort.get(Component.DataPort.RTS_NAME),
+		connector.sourcePort = connector.new Port(this.sourceDataPort.get(Component.DataPort.RTS_NAME),
 				this.sourceComponent.get(Component.INSTANCE_NAME), this.sourceComponent.get(Component.ID));
-		connector.sourceDataPort.properties = new Properties("COMPONENT_PATH_ID", sourceComponent.get(Component.PATH_URI));
-		connector.targetDataPort = connector.new DataPort(this.targetDataPort.get(Component.DataPort.RTS_NAME),
+		connector.sourcePort.properties = new Properties("COMPONENT_PATH_ID", sourceComponent.get(Component.PATH_URI));
+		connector.targetPort = connector.new Port(this.targetDataPort.get(Component.DataPort.RTS_NAME),
 				this.targetComponent.get(Component.INSTANCE_NAME), this.targetComponent.get(Component.ID));
-		connector.targetDataPort.properties = new Properties("COMPONENT_PATH_ID", targetComponent.get(Component.PATH_URI));
+		connector.targetPort.properties = new Properties("COMPONENT_PATH_ID", targetComponent.get(Component.PATH_URI));
 		
 		return connector;
 	}
+	/**
+	 * createServicePortConnector
+	 *
+	 * @return
+	 */
+	public ServicePortConnector createServicePortConnector() {
+		ServicePortConnector connector;
+			connector = new ServicePortConnector(connectionIdField.getText(),
+					connectionNameField.getText());
+			connector.sourcePort = connector.new Port(this.sourceDataPort.get(Component.DataPort.RTS_NAME),
+					this.sourceComponent.get(Component.INSTANCE_NAME), this.sourceComponent.get(Component.ID));
+			connector.sourcePort.properties = new Properties("COMPONENT_PATH_ID", sourceComponent.get(Component.PATH_URI));
+			connector.targetPort = connector.new Port(this.targetDataPort.get(Component.DataPort.RTS_NAME),
+					this.targetComponent.get(Component.INSTANCE_NAME), this.targetComponent.get(Component.ID));
+			connector.targetPort.properties = new Properties("COMPONENT_PATH_ID", targetComponent.get(Component.PATH_URI));
+		return  connector;
+	}
+	/**
+	 * isDataPortConnection
+	 *
+	 * @return
+	 * @throws Exception 
+	 */
+	public boolean isDataPortConnection() throws Exception {
+		if(!RTSystemBuilder.isConnectable(sourceComponent,
+				sourceDataPort, targetComponent, targetDataPort)) {
+			return false;
+		}
+		if(dataType == null) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * isServicePortConnection
+	 *
+	 * @return
+	 * @throws Exception 
+	 */
+	public boolean isServicePortConnection() throws Exception {
+		if(!RTSystemBuilder.isConnectable(sourceComponent,
+				sourceDataPort, targetComponent, targetDataPort)) {
+			return false;
+		}
+		if(dataType == null) {
+			return true;
+		}
+		return false;
+	}
+
+
 }

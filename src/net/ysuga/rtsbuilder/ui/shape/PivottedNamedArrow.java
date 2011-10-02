@@ -85,8 +85,8 @@ public class PivottedNamedArrow {
 	
 	
 	/**
-	 * Å‰‚ÌPivot‚ğ•Ô‚·D
-	 * Pivot‚ğ‚Ğ‚Æ‚Â‚à‚Á‚Ä‚¢‚È‚¯‚ê‚ÎCI“_‚ğ•Ô‚·‚Ì‚Å’ˆÓD
+	 * ï¿½Åï¿½ï¿½ï¿½Pivotï¿½ï¿½Ô‚ï¿½ï¿½D
+	 * Pivotï¿½ï¿½ï¿½Ğ‚Æ‚Â‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎCï¿½Iï¿½_ï¿½ï¿½Ô‚ï¿½ï¿½Ì‚Å’ï¿½ï¿½ÓD
 	 * @return
 	 * @return Point
 	 */
@@ -98,8 +98,8 @@ public class PivottedNamedArrow {
 	}
 	
 	/**
-	 * ÅŒã‚ÌPIVOTˆÊ’u‚ğ•Ô‚·D
-	 * Pivot‚ğ‚Ğ‚Æ‚Â‚à‚Á‚Ä‚¢‚È‚¯‚ê‚În“_‚ğ•Ô‚·‚Ì‚Å’ˆÓD
+	 * ï¿½ÅŒï¿½ï¿½PIVOTï¿½Ê’uï¿½ï¿½Ô‚ï¿½ï¿½D
+	 * Pivotï¿½ï¿½ï¿½Ğ‚Æ‚Â‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Înï¿½_ï¿½ï¿½Ô‚ï¿½ï¿½Ì‚Å’ï¿½ï¿½ÓD
 	 * @return
 	 * @return Point
 	 */
@@ -154,11 +154,23 @@ public class PivottedNamedArrow {
 	}
 
 	public double getCenterX() {
-		return namedArrow.getCenterX();
+
+		return getCenterPoint().x;
 	}
 
 	public double getCenterY() {
-		return namedArrow.getCenterY();
+		return getCenterPoint().y;
+	}
+	
+	public Point getCenterPoint() {
+		int numPivot = this.pivotList.size();
+		if(numPivot % 2 == 0) {
+			Point centerPivotA = pivotList.get(numPivot/2-1);
+			Point centerPivotB = pivotList.get(numPivot/2);
+			return new Point((centerPivotA.x + centerPivotB.x)/2, (centerPivotA.y + centerPivotB.y)/2);
+		} else {
+			return (Point)pivotList.get(numPivot/2).clone();
+		}
 	}
 
 	public int getPivotNum() {
@@ -177,7 +189,7 @@ public class PivottedNamedArrow {
 	}
 
 	/**
-	 * @param lineColor ƒZƒbƒg‚·‚é lineColor
+	 * @param lineColor ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ lineColor
 	 */
 	public void setLineColor(Color lineColor) {
 		this.lineColor = lineColor;
@@ -189,5 +201,15 @@ public class PivottedNamedArrow {
 	}
 
 	private Color lineColor;
+
+	/**
+	 * setTextLocation
+	 *
+	 * @param centerX
+	 * @param centerY
+	 */
+	public void setTextLocation(double centerX, double centerY) {
+		this.namedArrow.setTextLocation((int)centerX, (int)centerY);
+	}
 	
 }

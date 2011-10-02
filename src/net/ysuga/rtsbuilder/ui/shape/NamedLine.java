@@ -20,7 +20,8 @@ public class NamedLine {
 	Line2D line;
 	Polygon triangle;
 	
-	StringModelView name;
+	StringModelView nameModel;
+	String name;
 	
 	private boolean selected;
 	final public boolean isSelected() {
@@ -72,7 +73,7 @@ public class NamedLine {
 		}
 
 		public Rectangle getBounds() {
-			// TODO ©“®¶¬‚³‚ê‚½ƒƒ\ƒbƒhEƒXƒ^ƒu
+			// TODO ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½Eï¿½Xï¿½^ï¿½u
 			return rectangle.getBounds();
 		}
 
@@ -96,6 +97,7 @@ public class NamedLine {
 	}
 	
 	public NamedLine(String name, double x1, double y1, double x2, double y2, boolean closed) {
+		this.name = name;
 		this.closed  = closed;
 		
 		line = new Line2D.Double(x1, y1, x2, y2);
@@ -128,14 +130,11 @@ public class NamedLine {
 		double x = getCenterX();
 		double y = getCenterY()+ 10;
 		
-		this.name = new StringModelView(name, x, y);
-		
-		
-		
+		this.nameModel = new StringModelView(name, x, y);
 	}
 
 	public boolean contains(Point p) {
-		if(name.contains(p)) {
+		if(nameModel.contains(p)) {
 			return true;
 		}
 		
@@ -180,7 +179,7 @@ public class NamedLine {
 	}
 
 	/**
-	 * @param lineColor ƒZƒbƒg‚·‚é lineColor
+	 * @param lineColor ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ lineColor
 	 */
 	public final void setLineColor(Color lineColor) {
 		this.lineColor = lineColor;
@@ -194,7 +193,7 @@ public class NamedLine {
 	}
 
 	/**
-	 * @param textColor ƒZƒbƒg‚·‚é textColor
+	 * @param textColor ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ textColor
 	 */
 	public final void setTextColor(Color textColor) {
 		this.textColor = textColor;
@@ -221,7 +220,7 @@ public class NamedLine {
 		}
 		*/
 		g.setColor(textColor);
-		name.draw(g);
+		nameModel.draw(g);
 		
 		g.setColor(oldColor);
 
@@ -234,5 +233,9 @@ public class NamedLine {
 
 	public double getCenterY() {
 		return (line.getY2() + line.getY1())/2;
+	}
+	
+	public void setTextLocation(int x, int y) {
+		this.nameModel = new StringModelView(name, x, y);
 	}
 }

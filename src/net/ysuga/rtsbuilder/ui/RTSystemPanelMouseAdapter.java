@@ -16,6 +16,7 @@ import net.ysuga.rtsystem.profile.Component;
 import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.PivotList;
 import net.ysuga.rtsystem.profile.RTSProperties;
+import net.ysuga.rtsystem.profile.ServicePortConnector;
 
 /**
  * @author ysuga
@@ -275,8 +276,13 @@ public class RTSystemPanelMouseAdapter implements MouseListener,
 									portShape.getDataPort());
 
 							if (dialog.doModal() == JOptionPane.OK_OPTION) {
-								DataPortConnector connector = dialog.createConnection();
-								panel.getRTSystemProfile().addConnector(connector);
+								if(dialog.isDataPortConnection()) {
+									DataPortConnector connector = dialog.createDataPortConnector();
+									panel.getRTSystemProfile().addDataPortConnector(connector); 						
+								} else if(dialog.isServicePortConnection()){
+									ServicePortConnector connector = dialog.createServicePortConnector();
+									panel.getRTSystemProfile().addServicePortConnector(connector);
+								}
 								panel.refresh();
 							}
 						} catch (Exception e) {
@@ -307,7 +313,7 @@ public class RTSystemPanelMouseAdapter implements MouseListener,
 					y = 0;
 				panel.getSelectedComponent().setLocation(new Point(x, y));
 				for (DataPortConnector con : (Set<DataPortConnector>) panel
-						.getRTSystemProfile().connectorSet) {
+						.getRTSystemProfile().dataPortConnectorSet) {
 					if (con.getSourceComponentPathUri().equals(
 							panel.getSelectedComponent()
 									.get(Component.PATH_URI))) {

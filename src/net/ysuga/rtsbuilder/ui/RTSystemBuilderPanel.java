@@ -28,7 +28,7 @@ import net.ysuga.rtsbuilder.ui.shape.RTSystemShape;
 import net.ysuga.rtsbuilder.ui.shape.RTSystemShapeBuilder;
 import net.ysuga.rtsystem.profile.Component;
 import net.ysuga.rtsystem.profile.Component.DataPort;
-import net.ysuga.rtsystem.profile.DataPortConnector;
+import net.ysuga.rtsystem.profile.PortConnector;
 import net.ysuga.rtsystem.profile.RTSystemProfile;
 
 import org.xml.sax.SAXException;
@@ -137,7 +137,7 @@ public class RTSystemBuilderPanel extends JPanel {
 	/**
 	 * Selected Transition
 	 */
-	private DataPortConnector selectedConnector;
+	private PortConnector selectedConnector;
 
 	/**
 	 * 
@@ -148,7 +148,7 @@ public class RTSystemBuilderPanel extends JPanel {
 	 * @return selected transition object. If no transition is selected, null
 	 *         will be returned. </div>
 	 */
-	public DataPortConnector getSelectedConnector() {
+	public PortConnector getSelectedConnector() {
 		return selectedConnector;
 	}
 
@@ -161,7 +161,7 @@ public class RTSystemBuilderPanel extends JPanel {
 	 * @param transition
 	 *            </div>
 	 */
-	public void setSelectedConnector(DataPortConnector connector) {
+	public void setSelectedConnector(PortConnector connector) {
 		selectedConnector = connector;
 		selectedComponent = null;
 	}

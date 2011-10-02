@@ -15,8 +15,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
-import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.PivotList;
+import net.ysuga.rtsystem.profile.PortConnector;
 import net.ysuga.rtsystem.profile.RTSProperties;
 
 /**
@@ -30,9 +30,9 @@ import net.ysuga.rtsystem.profile.RTSProperties;
  *
  */
 public class ConnectorShape  {
-	private DataPortConnector connector;
+	private PortConnector connector;
 	
-	public DataPortConnector getConnector() {
+	public PortConnector getConnector() {
 		return connector;
 	}
 	
@@ -57,7 +57,7 @@ public class ConnectorShape  {
 	 * Constructor
 	 * </div>
 	 */
-	public ConnectorShape(DataPortConnector connector, PortShape sourcePortShape, PortShape targetPortShape) {
+	public ConnectorShape(PortConnector connector, PortShape sourcePortShape, PortShape targetPortShape) {
 		this.connector = connector;
 		this.sourcePortShape = sourcePortShape;
 		this.targetPortShape = targetPortShape;
@@ -80,7 +80,7 @@ public class ConnectorShape  {
 
 		Point lastPivot;
 		Point firstPivot;
-		setArrow(new PivottedNamedArrow( connector.get(DataPortConnector.NAME), sourcePortShape.getCenterPoint(),
+		setArrow(new PivottedNamedArrow( connector.get(PortConnector.NAME), sourcePortShape.getCenterPoint(),
 				targetPortShape.getCenterPoint(), getPivotList()));
 
 		if(getPivotList().size() != 0) { 
@@ -106,7 +106,7 @@ public class ConnectorShape  {
 		Point toEdge = detectEdge(targetRect, tempLineTo);
 
 		if (fromEdge != null && toEdge != null) {
-			setArrow(new PivottedNamedArrow(connector.get(DataPortConnector.NAME), 
+			setArrow(new PivottedNamedArrow(connector.get(PortConnector.NAME), 
 					fromEdge, toEdge, getPivotList()));
 		}
 	}
@@ -134,6 +134,7 @@ public class ConnectorShape  {
 		
 		getArrow().setLineColor(lineColor);
 		getArrow().setSelected(isSelected());
+		getArrow().setTextLocation(getArrow().getCenterX(), getArrow().getCenterY());
 		getArrow().draw(g);
 		
 		sourcePortShape.draw(g);

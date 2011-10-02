@@ -13,7 +13,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Set;
 
-import net.ysuga.rtsystem.profile.DataPortConnector;
+import net.ysuga.rtsystem.profile.PortConnector;
 import net.ysuga.rtsystem.profile.RTSProperties;
 import net.ysuga.rtsystem.profile.RTSystemProfile;
 
@@ -157,7 +157,7 @@ public class RTSystemShape {
 	 * @param selectedState
 	 *            </div>
 	 */
-	public void setSlectedTransition(DataPortConnector selectedConnector) {
+	public void setSlectedTransition(PortConnector selectedConnector) {
 		for (ConnectorShape shape : connectorShapeList) {
 			if (shape.getConnector() == selectedConnector) {
 				shape.setSelected(true);
@@ -185,7 +185,7 @@ public class RTSystemShape {
 	 * @param selectedTransition
 	 *            </div>
 	 */
-	public void setSelectedConnector(DataPortConnector selectedConnector) {
+	public void setSelectedConnector(PortConnector selectedConnector) {
 		for (ConnectorShape connectorShape : connectorShapeList) {
 			if (connectorShape.getConnector().equals(selectedConnector)) {
 				connectorShape.setSelected(true);
