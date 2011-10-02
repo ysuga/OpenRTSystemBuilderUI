@@ -13,7 +13,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Set;
 
-import net.ysuga.rtsystem.profile.Connector;
+import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.RTSProperties;
 import net.ysuga.rtsystem.profile.RTSystemProfile;
 
@@ -60,7 +60,7 @@ public class RTSystemShape {
 	private RTSystemProfile rtSystemProfile;
 
 	/**
-	 * <div lang="ja"> ƒRƒ“ƒXƒgƒ‰ƒNƒ^ </div> <div lang="en"> Constructor </div>
+	 * <div lang="ja"> ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ </div> <div lang="en"> Constructor </div>
 	 */
 	public RTSystemShape() {
 		componentShapeList = new ComponentShapeList();
@@ -157,7 +157,7 @@ public class RTSystemShape {
 	 * @param selectedState
 	 *            </div>
 	 */
-	public void setSlectedTransition(Connector selectedConnector) {
+	public void setSlectedTransition(DataPortConnector selectedConnector) {
 		for (ConnectorShape shape : connectorShapeList) {
 			if (shape.getConnector() == selectedConnector) {
 				shape.setSelected(true);
@@ -185,7 +185,7 @@ public class RTSystemShape {
 	 * @param selectedTransition
 	 *            </div>
 	 */
-	public void setSelectedConnector(Connector selectedConnector) {
+	public void setSelectedConnector(DataPortConnector selectedConnector) {
 		for (ConnectorShape connectorShape : connectorShapeList) {
 			if (connectorShape.getConnector().equals(selectedConnector)) {
 				connectorShape.setSelected(true);

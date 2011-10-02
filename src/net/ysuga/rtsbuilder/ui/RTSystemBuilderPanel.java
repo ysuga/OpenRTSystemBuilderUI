@@ -28,14 +28,14 @@ import net.ysuga.rtsbuilder.ui.shape.RTSystemShape;
 import net.ysuga.rtsbuilder.ui.shape.RTSystemShapeBuilder;
 import net.ysuga.rtsystem.profile.Component;
 import net.ysuga.rtsystem.profile.Component.DataPort;
-import net.ysuga.rtsystem.profile.Connector;
+import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.RTSystemProfile;
 
 import org.xml.sax.SAXException;
 
 /**
  * 
- * <div lang="ja"> StateMachineƒNƒ‰ƒX‚ğ•\¦‚¨‚æ‚ÑŠÇ—‚·‚é‚½‚ß‚Ìƒpƒlƒ‹ƒNƒ‰ƒXD
+ * <div lang="ja"> StateMachineï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÑŠÇ—ï¿½ï¿½ï¿½ï¿½é‚½ï¿½ß‚Ìƒpï¿½lï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½D
  * 
  * </div> <div lang="en"> Panel Class for controlling StateMachine class </div>
  * 
@@ -74,9 +74,9 @@ public class RTSystemBuilderPanel extends JPanel {
 
 	/**
 	 * 
-	 * <div lang="ja"> StateMachine‚Ìæ“¾
+	 * <div lang="ja"> StateMachineï¿½Ìæ“¾
 	 * 
-	 * @return Panel‚ª•Û‚·‚éStateMachine </div> <div lang="en"> getter for
+	 * @return Panelï¿½ï¿½ï¿½Ûï¿½ï¿½ï¿½ï¿½ï¿½StateMachine </div> <div lang="en"> getter for
 	 *         StateMachine owned by this panel.
 	 * @return </div>
 	 */
@@ -109,9 +109,9 @@ public class RTSystemBuilderPanel extends JPanel {
 
 	/**
 	 * 
-	 * getSelectedState <div lang="ja"> ‘I‘ğ’†‚ÌState‚Ìæ“¾
+	 * getSelectedState <div lang="ja"> ï¿½Iï¿½ğ’†‚ï¿½Stateï¿½Ìæ“¾
 	 * 
-	 * @return ‘I‘ğ’†‚ÌState.‚È‚¯‚ê‚Înull </div> <div lang="en"> getter function for
+	 * @return ï¿½Iï¿½ğ’†‚ï¿½State.ï¿½È‚ï¿½ï¿½ï¿½ï¿½null </div> <div lang="en"> getter function for
 	 *         selected state
 	 * @return State object. If not selected, null will be returned. </div>
 	 */
@@ -121,7 +121,7 @@ public class RTSystemBuilderPanel extends JPanel {
 
 	/**
 	 * 
-	 * setSelectedState <div lang="ja"> ‘I‘ğ’†‚ÌState‚Ìİ’èD©“®“I‚É‘I‘ğ’†‚ÌTransition‚Ínull‚É‚È‚éD
+	 * setSelectedState <div lang="ja"> ï¿½Iï¿½ğ’†‚ï¿½Stateï¿½Ìİ’ï¿½Dï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½É‘Iï¿½ğ’†‚ï¿½Transitionï¿½ï¿½nullï¿½É‚È‚ï¿½D
 	 * 
 	 * @param state
 	 *            </div> <div lang="en"> Setting selected state. Selected
@@ -137,7 +137,7 @@ public class RTSystemBuilderPanel extends JPanel {
 	/**
 	 * Selected Transition
 	 */
-	private Connector selectedConnector;
+	private DataPortConnector selectedConnector;
 
 	/**
 	 * 
@@ -148,7 +148,7 @@ public class RTSystemBuilderPanel extends JPanel {
 	 * @return selected transition object. If no transition is selected, null
 	 *         will be returned. </div>
 	 */
-	public Connector getSelectedConnector() {
+	public DataPortConnector getSelectedConnector() {
 		return selectedConnector;
 	}
 
@@ -161,7 +161,7 @@ public class RTSystemBuilderPanel extends JPanel {
 	 * @param transition
 	 *            </div>
 	 */
-	public void setSelectedConnector(Connector connector) {
+	public void setSelectedConnector(DataPortConnector connector) {
 		selectedConnector = connector;
 		selectedComponent = null;
 	}
@@ -191,7 +191,7 @@ public class RTSystemBuilderPanel extends JPanel {
 
 	/**
 	 * 
-	 * <div lang="ja"> ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * <div lang="ja"> ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 	 * 
 	 * @param stateMachine
 	 *            </div> <div lang="en"> Constructor
@@ -621,5 +621,19 @@ public class RTSystemBuilderPanel extends JPanel {
 	
 	public DataPort getSelectedDataPort() {
 		return selectedDataPort;
+	}
+
+	/**
+	 * addRTComponentOnEditor
+	 *
+	 * @param fullPath
+	 * @param point
+	 * @throws Exception 
+	 */
+	public void addRTComponentOnEditor(String fullPath, Point point) throws Exception {
+		Component component = RTSystemBuilder.createComponent(fullPath);
+		component.setLocation(point);
+		this.rtSystemProfile.addComponent(component);
+		RTSystemBuilder.findComponent(component);
 	}
 }

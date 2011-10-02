@@ -15,7 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
-import net.ysuga.rtsystem.profile.Connector;
+import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.PivotList;
 import net.ysuga.rtsystem.profile.RTSProperties;
 
@@ -30,9 +30,9 @@ import net.ysuga.rtsystem.profile.RTSProperties;
  *
  */
 public class ConnectorShape  {
-	private Connector connector;
+	private DataPortConnector connector;
 	
-	public Connector getConnector() {
+	public DataPortConnector getConnector() {
 		return connector;
 	}
 	
@@ -51,13 +51,13 @@ public class ConnectorShape  {
 	}
 	/**
 	 * <div lang="ja">
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 	 * </div>
 	 * <div lang="en">
 	 * Constructor
 	 * </div>
 	 */
-	public ConnectorShape(Connector connector, PortShape sourcePortShape, PortShape targetPortShape) {
+	public ConnectorShape(DataPortConnector connector, PortShape sourcePortShape, PortShape targetPortShape) {
 		this.connector = connector;
 		this.sourcePortShape = sourcePortShape;
 		this.targetPortShape = targetPortShape;
@@ -80,14 +80,14 @@ public class ConnectorShape  {
 
 		Point lastPivot;
 		Point firstPivot;
-		setArrow(new PivottedNamedArrow( connector.get(Connector.NAME), sourcePortShape.getCenterPoint(),
+		setArrow(new PivottedNamedArrow( connector.get(DataPortConnector.NAME), sourcePortShape.getCenterPoint(),
 				targetPortShape.getCenterPoint(), getPivotList()));
 
 		if(getPivotList().size() != 0) { 
 			firstPivot = getArrow().getFirstPivotPoint();
 			lastPivot = getArrow().getLastPivotPoint();
 		}else if (sourceRect.intersects(targetRect)) { 
-			// d‚È‚Á‚Ä‚¢‚é‚Æ–ï‰î‚È‚Ì‚ÅC‹­§“I‚ÉPIVOT‚ğ’Ç‰ÁD
+			// ï¿½dï¿½È‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Æ–ï¿½ï¿½È‚Ì‚ÅCï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½PIVOTï¿½ï¿½Ç‰ï¿½ï¿½D
 			getArrow().addPivot(new Point((int) getArrow().getCenterX() - 40,
 					(int) getArrow().getCenterY() - 40));
 			getArrow().addPivot(new Point((int) getArrow().getCenterX() + 40,
@@ -106,7 +106,7 @@ public class ConnectorShape  {
 		Point toEdge = detectEdge(targetRect, tempLineTo);
 
 		if (fromEdge != null && toEdge != null) {
-			setArrow(new PivottedNamedArrow(connector.get(Connector.NAME), 
+			setArrow(new PivottedNamedArrow(connector.get(DataPortConnector.NAME), 
 					fromEdge, toEdge, getPivotList()));
 		}
 	}
@@ -267,7 +267,7 @@ public class ConnectorShape  {
 		return connector.getSelectedPivot();
 	}
 	/**
-	 * @param selectedPivot ƒZƒbƒg‚·‚é selectedPivot
+	 * @param selectedPivot ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ selectedPivot
 	 */
 	public final void setSelectedPivot(Point selectedPivot) {
 		//this.selectedPivot = selectedPivot;

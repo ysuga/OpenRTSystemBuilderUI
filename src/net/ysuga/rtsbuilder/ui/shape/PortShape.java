@@ -64,7 +64,7 @@ public class PortShape implements ModelShape {
 
 		/**
 		 * @param bgColor
-		 *            ƒZƒbƒg‚·‚é bgColor
+		 *            ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ bgColor
 		 */
 		public final void setBgColor(Color bgColor) {
 			this.bgColor = bgColor;
@@ -79,7 +79,7 @@ public class PortShape implements ModelShape {
 
 		/**
 		 * @param fgColor
-		 *            ƒZƒbƒg‚·‚é fgColor
+		 *            ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ fgColor
 		 */
 		public final void setFgColor(Color fgColor) {
 			this.fgColor = fgColor;
@@ -126,7 +126,7 @@ public class PortShape implements ModelShape {
 	
 	
 	/**
-	 * <div lang="ja"> ƒRƒ“ƒXƒgƒ‰ƒNƒ^ </div> <div lang="en"> Constructor </div>
+	 * <div lang="ja"> ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ </div> <div lang="en"> Constructor </div>
 	 * 
 	 * @param dataPort
 	 */
@@ -147,6 +147,9 @@ public class PortShape implements ModelShape {
 			shape = new OutPortShape(rect.x + rect.width - 5, rect.y + 5
 					+ numRightSidePort * (10 + 5), 15, 10);
 			side = SIDE_RIGHT;
+			break;
+		case DataPort.SERVICE_PROVIDER:
+			
 			break;
 		case DataPort.DIRECTION_UNKNOWN:
 		default:
@@ -202,7 +205,7 @@ public class PortShape implements ModelShape {
 	 * @return </div>
 	 */
 	public Point getCenterPoint() {
-		// TODO ©“®¶¬‚³‚ê‚½ƒƒ\ƒbƒhEƒXƒ^ƒu
+		// TODO ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½Eï¿½Xï¿½^ï¿½u
 		return new Point((int) shape.getBounds().getCenterX(), (int) shape
 				.getBounds().getCenterY());
 	}

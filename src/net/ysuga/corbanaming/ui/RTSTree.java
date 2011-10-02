@@ -22,8 +22,15 @@ import javax.swing.JTree;
  */
 public class RTSTree extends JTree {
 
+	/**
+	 * 
+	 * Constructor
+	 */
 	public RTSTree() {
 		super();
+		RTSTreeMouseAdapter mouseAdapter = new RTSTreeMouseAdapter(this);
+		this.addMouseListener(mouseAdapter);
+		this.addMouseMotionListener(mouseAdapter);
 	}
 	
 	

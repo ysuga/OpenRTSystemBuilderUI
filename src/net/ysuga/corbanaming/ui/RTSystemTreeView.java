@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
@@ -27,8 +26,12 @@ public class RTSystemTreeView extends JPanel {
 	
 	private RTSTree treeView;
 
+	public RTSTree getTree() {
+		return treeView;
+	}
+	
 	protected void onConnect() {
-		String hostAddress = JOptionPane.showInputDialog(this, "Name Server?");
+		String hostAddress = JOptionPane.showInputDialog(this, "Name Server?", "localhost");
 		if(hostAddress != null) {
 			try {
 				RTNamingContext nc = CorbaNamingParser.buildRTNamingContext(hostAddress);
@@ -99,17 +102,6 @@ public class RTSystemTreeView extends JPanel {
 		add(BorderLayout.NORTH, toolBar);
 		
 		
-		
-		/*
-		String hostAddress = "localhost:2809";
-
-		try {
-			rootNode.add(RTSTreeNode.create(hostAddress));
-		} catch (Exception e) {
-			logger.warning(e.getLocalizedMessage());
-			
-		}
-		*/
 		this.setPreferredSize(new Dimension(1400, 1200));
 	}
 

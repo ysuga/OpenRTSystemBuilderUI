@@ -11,7 +11,7 @@ package net.ysuga.rtsbuilder.ui.shape;
 import java.util.Set;
 
 import net.ysuga.rtsystem.profile.Component;
-import net.ysuga.rtsystem.profile.Connector;
+import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.Properties;
 import net.ysuga.rtsystem.profile.RTSProperties;
 import net.ysuga.rtsystem.profile.RTSystemProfile;
@@ -43,13 +43,13 @@ public class RTSystemShapeBuilder {
 	 */
 	public static RTSystemShape buildRTSystemShape(
 			RTSystemProfile rtSystemProfile) {
-		// TODO é©ìÆê∂ê¨Ç≥ÇÍÇΩÉÅÉ\ÉbÉhÅEÉXÉ^Éu
+		// TODO ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÍÇΩÔøΩÔøΩÔøΩ\ÔøΩbÔøΩhÔøΩEÔøΩXÔøΩ^ÔøΩu
 		RTSystemShape shape = new RTSystemShape();
 		for(Component component : (Set<Component>)rtSystemProfile.componentSet) {
 			shape.componentShapeList.add(new ComponentShape(component));
 		}
 		
-		for(Connector connector : (Set<Connector>)rtSystemProfile.connectorSet) {
+		for(DataPortConnector connector : (Set<DataPortConnector>)rtSystemProfile.connectorSet) {
 			String sourceComponentPathUri =  connector.sourceDataPort.properties.get(Properties.VALUE);
 			String targetComponentPathUri =  connector.targetDataPort.properties.get(Properties.VALUE);
 
@@ -58,13 +58,13 @@ public class RTSystemShapeBuilder {
 			for(ComponentShape compShape : shape.componentShapeList) {
 				if(compShape.getComponent().get(Component.PATH_URI).equals(sourceComponentPathUri)) {
 					for(PortShape portShape : (Set<PortShape>)compShape.portShapeSet) {
-						if(portShape.getDataPort().get(Component.DataPort.RTS_NAME).equals(connector.sourceDataPort.get(Connector.DataPort.PORT_NAME))) {
+						if(portShape.getDataPort().get(Component.DataPort.RTS_NAME).equals(connector.sourceDataPort.get(DataPortConnector.DataPort.PORT_NAME))) {
 							sourcePort = portShape;
 						}
 					}
 				} else if(compShape.getComponent().get(Component.PATH_URI).equals(targetComponentPathUri)) {
 					for(PortShape portShape : (Set<PortShape>)compShape.portShapeSet) {
-						if(portShape.getDataPort().get(Component.DataPort.RTS_NAME).equals(connector.targetDataPort.get(Connector.DataPort.PORT_NAME))) {
+						if(portShape.getDataPort().get(Component.DataPort.RTS_NAME).equals(connector.targetDataPort.get(DataPortConnector.DataPort.PORT_NAME))) {
 							targetPort = portShape;
 						}
 					}					

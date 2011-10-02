@@ -13,7 +13,7 @@ import net.ysuga.rtsbuilder.ui.shape.ConnectorShape;
 import net.ysuga.rtsbuilder.ui.shape.PivottedNamedArrow;
 import net.ysuga.rtsbuilder.ui.shape.PortShape;
 import net.ysuga.rtsystem.profile.Component;
-import net.ysuga.rtsystem.profile.Connector;
+import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.PivotList;
 import net.ysuga.rtsystem.profile.RTSProperties;
 
@@ -127,8 +127,8 @@ public class RTSystemPanelMouseAdapter implements MouseListener,
 				 * panel.setSelectedState(stateShape.getState()); if
 				 * (dialog.doModal() == AbstractStateSettingDialog.OK_OPTION) {
 				 * try { dialog.createTransition(); } catch
-				 * (InvalidConnectionException e) { // TODO é©ìÆê∂ê¨Ç≥ÇÍÇΩ catch ÉuÉçÉbÉN
-				 * e.printStackTrace(); Object obj =
+				 * (InvalidConnectionException e) { // TODO ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÍÇΩ catch
+				 * ÔøΩuÔøΩÔøΩÔøΩbÔøΩN e.printStackTrace(); Object obj =
 				 * "InvalidConnectionException";
 				 * JOptionPane.showMessageDialog(panel, obj); } panel.repaint();
 				 * } } panel.setEditMode(StateMachinePanel.EDIT_NORMAL); }
@@ -139,17 +139,11 @@ public class RTSystemPanelMouseAdapter implements MouseListener,
 			}
 			for (PortShape portShape : (Set<PortShape>) componentShape.portShapeSet) {
 				if (portShape.contains(arg0.getPoint())) {
-					if (panel.getEditMode() == RTSystemBuilderPanel.EDIT_CONNECTION) {
-						ConnectionDialog dialog = new ConnectionDialog(panel.getSelectedDataPort(), portShape.getDataPort());
-						if(dialog.doModal() == JOptionPane.OK_OPTION) {
-							
-						}
-					} else {
-						panel.setSelectedComponent(componentShape
-								.getComponent());
-						panel.setSelectedPort(portShape.getDataPort());
-						panel.setEditMode(RTSystemBuilderPanel.EDIT_CONNECTION);
-					}
+
+					panel.setSelectedComponent(componentShape.getComponent());
+					panel.setSelectedPort(portShape.getDataPort());
+					panel.setEditMode(RTSystemBuilderPanel.EDIT_CONNECTION);
+
 					return;
 				}
 			}
@@ -267,14 +261,41 @@ public class RTSystemPanelMouseAdapter implements MouseListener,
 				panel.setSelectedPivot(null);
 			}
 		}
+		if (panel.getEditMode() == RTSystemBuilderPanel.EDIT_CONNECTION) {
+
+			for (ComponentShape componentShape : panel.getRTSystemShape()
+					.getComponentShapeList()) {
+				for (PortShape portShape : (Set<PortShape>) componentShape.portShapeSet) {
+					if (portShape.contains(arg0.getPoint())) {
+						try {
+							ConnectionDialog dialog = new ConnectionDialog(
+									panel.getSelectedComponent(),
+									panel.getSelectedDataPort(),
+									componentShape.getComponent(),
+									portShape.getDataPort());
+
+							if (dialog.doModal() == JOptionPane.OK_OPTION) {
+								DataPortConnector connector = dialog.createConnection();
+								panel.getRTSystemProfile().addConnector(connector);
+								panel.refresh();
+							}
+						} catch (Exception e) {
+							
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			panel.setEditMode(RTSystemBuilderPanel.EDIT_NORMAL);
+		}
 
 		panel.repaint();
 	}
 
 	public void mouseDragged(MouseEvent arg0) {
 		if (panel.getEditMode() == RTSystemBuilderPanel.EDIT_CONNECTION) {
-			// panel.repaint();
-			// panel.setMousePosition(arg0.getPoint());
+			panel.setMousePosition(arg0.getPoint());
+			panel.repaint();
 
 		} else {
 			if (panel.getSelectedComponent() != null) {
@@ -285,7 +306,7 @@ public class RTSystemPanelMouseAdapter implements MouseListener,
 				if (y < 0)
 					y = 0;
 				panel.getSelectedComponent().setLocation(new Point(x, y));
-				for (Connector con : (Set<Connector>) panel
+				for (DataPortConnector con : (Set<DataPortConnector>) panel
 						.getRTSystemProfile().connectorSet) {
 					if (con.getSourceComponentPathUri().equals(
 							panel.getSelectedComponent()
@@ -332,10 +353,6 @@ public class RTSystemPanelMouseAdapter implements MouseListener,
 
 	public void mouseMoved(MouseEvent arg0) {
 		if (panel.getEditMode() == RTSystemBuilderPanel.EDIT_TRANSITION) {
-			// panel.repaint();
-			panel.setMousePosition(arg0.getPoint());
-			panel.repaint();
-		} else if (panel.getEditMode() == RTSystemBuilderPanel.EDIT_CONNECTION) {
 			// panel.repaint();
 			panel.setMousePosition(arg0.getPoint());
 			panel.repaint();

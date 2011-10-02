@@ -16,7 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import net.ysuga.rtsbuilder.ui.shape.ConnectorShape;
-import net.ysuga.rtsystem.profile.Connector;
+import net.ysuga.rtsystem.profile.DataPortConnector;
 
 /**
  * <div lang="ja">
@@ -34,7 +34,7 @@ public class ConnectorPopupMenu {
 	private JPopupMenu popupMenu;
 	/**
 	 * <div lang="ja">
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 	 * @param rtSystemBuilderPanel
 	 * </div>
 	 * <div lang="en">
