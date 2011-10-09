@@ -34,7 +34,7 @@ import net.ysuga.rtsystem.profile.Component;
 public class ComponentPopupMenu {
 
 	protected JPopupMenu popupMenu;
-	private java.awt.Component panel;
+	private RTSystemBuilderPanel panel;
 	private Component component;
 
 	/**
@@ -51,12 +51,12 @@ public class ComponentPopupMenu {
 		this.component = (Component) component.getRTSObject();
 		popupMenu = new JPopupMenu();
 
-		JMenuItem refreshMenuItem = new JMenuItem(
-				new AbstractAction("Refresh") {
-					public void actionPerformed(ActionEvent arg0) {
-						onRefresh();
-					}
-				});
+		JMenuItem refreshMenuItem = new JMenuItem(new AbstractAction(
+				"Synchronize") {
+			public void actionPerformed(ActionEvent arg0) {
+				onSynchronize();
+			}
+		});
 		popupMenu.add(refreshMenuItem);
 
 		popupMenu.add(new JSeparator());
@@ -83,16 +83,24 @@ public class ComponentPopupMenu {
 			}
 		});
 		popupMenu.add(resetMenuItem);
+
 		popupMenu.add(new JSeparator());
 
 		popupMenu.add(new JSeparator());
-		JMenuItem settingMenuItem = new JMenuItem(
-				new AbstractAction("Configure") {
-					public void actionPerformed(ActionEvent arg0) {
+		JMenuItem settingMenuItem = new JMenuItem(new AbstractAction(
+				"Configure") {
+			public void actionPerformed(ActionEvent arg0) {
 
-					}
-				});
+			}
+		});
 		popupMenu.add(settingMenuItem);
+
+		JMenuItem removeMenuItem = new JMenuItem(new AbstractAction("Delete") {
+			public void actionPerformed(ActionEvent arg0) {
+				onRemove();
+			}
+		});
+		popupMenu.add(removeMenuItem);
 	}
 
 	/**
@@ -136,12 +144,17 @@ public class ComponentPopupMenu {
 		}
 	}
 
-	private void onRefresh() {
+	private void onSynchronize() {
 		try {
 			RTSystemBuilder.findComponent((Component) component);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(panel, "Failed to find RTComponent");
 			e.printStackTrace();
 		}
+	}
+	
+	private void onRemove() {
+		panel.getRTSystemProfile().componentSet.remove(this.component);
+		panel.refresh();
 	}
 }

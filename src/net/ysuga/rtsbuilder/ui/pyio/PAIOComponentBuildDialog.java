@@ -6,7 +6,7 @@
  * @copyright 2011, ysuga.net allrights reserved.
  *
  */
-package net.ysuga.rtsbuilder.ui.paio;
+package net.ysuga.rtsbuilder.ui.pyio;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

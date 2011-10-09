@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.ysuga.rtsbuilder.RTSystemBuilder;
-import net.ysuga.rtsbuilder.ui.paio.PAIOComponentCreationDialog;
+import net.ysuga.rtsbuilder.ui.pyio.PAIOComponentCreationDialog;
 import net.ysuga.rtsbuilder.ui.shape.ComponentPopupMenu;
 import net.ysuga.rtsbuilder.ui.shape.ConnectorShape;
 import net.ysuga.rtsbuilder.ui.shape.RTSystemShape;

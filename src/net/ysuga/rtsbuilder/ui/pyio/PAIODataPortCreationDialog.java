@@ -6,7 +6,7 @@
  * @copyright 2011, ysuga.net allrights reserved.
  *
  */
-package net.ysuga.rtsbuilder.ui.paio;
+package net.ysuga.rtsbuilder.ui.pyio;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -36,11 +36,21 @@ public class PAIODataPortCreationDialog extends JDialog {
 	
 	public PAIODataPortCreationDialog(String direction) {
 		super();
-
+		super.setTitle("\"PyIO\" DataPort Setting");
 		portDirectionField = new JTextField(direction);
 		portDirectionField.setEditable(false);
 		portNameField = new JTextField(direction);
 		portTypeField = new JTextField("");
+	}
+
+	/**
+	 * Constructor
+	 * @param dataPort
+	 */
+	public PAIODataPortCreationDialog(String direction, DataPort dataPort) {
+		this(direction);
+		this.portNameField.setText(dataPort.getPlainName());
+		this.portTypeField.setText(dataPort.getDataType());
 	}
 
 	private int exitOption = JOptionPane.CANCEL_OPTION;

@@ -11,7 +11,7 @@ package net.ysuga.rtsbuilder.ui.shape;
 import java.util.List;
 import java.util.Set;
 
-import net.ysuga.rtsbuilder.ui.paio.PAIOComponentShape;
+import net.ysuga.rtsbuilder.ui.pyio.PAIOComponentShape;
 import net.ysuga.rtsystem.profile.Component;
 import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.DataPortConnector;

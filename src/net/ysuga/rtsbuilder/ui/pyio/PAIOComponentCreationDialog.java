@@ -6,13 +6,14 @@
  * @copyright 2011, ysuga.net allrights reserved.
  *
  */
-package net.ysuga.rtsbuilder.ui.paio;
+package net.ysuga.rtsbuilder.ui.pyio;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -28,7 +29,6 @@ import net.ysuga.rtsystem.profile.Component;
 import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.ExecutionContext;
 import net.ysuga.rtsystem.profile.PAIOComponent;
-import net.ysuga.rtsystem.profile.RTSObject;
 
 /**
  * 
@@ -91,18 +91,20 @@ public class PAIOComponentCreationDialog extends JDialog {
 		dataPortList = new ArrayList<DataPort>();
 	}
 
-	public PAIOComponentCreationDialog(RTSObject rtsObj) {
+	public PAIOComponentCreationDialog(PAIOComponent component) {
+		this(component.getModuleName(), component.getNameServer(), component.getNamingContext(), 
+				component.getExecutionRate(), component.getVendor(), component.getVersion(), component.getCategory());
 		
-	}
-	
-	/**
-	 * setRTSObject
-	 *
-	 * @param rtsObj
-	 */
-	public void setRTSObject(RTSObject rtsObj) {
-		// TODO 自動生成されたメソッド・スタブ
-		
+		for(DataPort dataPort : (Set<DataPort>)component.dataPortSet) {
+			if(dataPort.getDirection() == DataPort.DIRECTION_IN) {
+				this.dataInPortComboBox.addItem(dataPort.getPlainName());
+			} else if (dataPort.getDirection() == DataPort.DIRECTION_OUT) {
+				this.dataOutPortComboBox.addItem(dataPort.getPlainName());
+			} else {
+				this.servicePortComboBox.addItem(dataPort.getPlainName());
+			}
+			this.dataPortList.add(dataPort);
+		}
 	}
 	
 	
@@ -261,14 +263,18 @@ public class PAIOComponentCreationDialog extends JDialog {
 			pathUri = pathUri + "/";
 		}
 		pathUri = pathUri + moduleNameField.getText() + "0.rtc";
+		String instanceName = this.moduleNameField.getText() + "0";
 		PAIOComponent component = new PAIOComponent(
-				this.moduleNameField.getText() + "0", pathUri, Id);
+				instanceName, pathUri, Id);
 
+		component.setNamingContext(namingContextField.getText());
 		component.executionContextSet.add(new ExecutionContext("0",
 				"rtsExt:execution_context_ext", "PERIODIC",
 				this.executionRateField.getText()));
 		
 		for (DataPort port : dataPortList) {
+			String remappedName = instanceName + "." + port.getPlainName();
+			port.put(DataPort.RTS_NAME, remappedName);
 			component.dataPortSet.add(port);
 		}
 
@@ -281,19 +287,51 @@ public class PAIOComponentCreationDialog extends JDialog {
 		if (dialog.doModal() == JOptionPane.OK_OPTION) {
 			DataPort dataPort = dialog.createDataPort();
 			this.dataPortList.add(dataPort);
-			setVisible(false);
 			dataInPortComboBox.addItem(dataPort.get(DataPort.RTS_NAME));
-			pack();
-			setVisible(true);
+			refresh();
 		}
 	}
 
-	private void onDelDataInPort() {
+	/**
+	 * refresh
+	 *
+	 */
+	private void refresh() {
+		setVisible(false);
+		pack();
+		setVisible(true);
+	}
 
+	private void onDelDataInPort() {
+		String name = (String)dataInPortComboBox.getSelectedItem();
+		int index = dataInPortComboBox.getSelectedIndex();
+		for(DataPort dataPort : dataPortList) {
+			if(dataPort.get(DataPort.RTS_NAME).equals(name)) {
+				dataInPortComboBox.removeItemAt(index);
+				dataPortList.remove(dataPort);
+				refresh();
+				return;
+			}
+		}
 	}
 
 	private void onEditDataInPort() {
-
+		String name = (String)dataInPortComboBox.getSelectedItem();
+		int index = dataInPortComboBox.getSelectedIndex();
+		for(DataPort dataPort : dataPortList) {
+			if(dataPort.get(DataPort.RTS_NAME).equals(name)) {
+				PAIODataPortCreationDialog dialog = new PAIODataPortCreationDialog("DataInPort", dataPort);
+				if(dialog.doModal() == JOptionPane.OK_OPTION) {
+					dataPortList.remove(dataPort);
+					dataInPortComboBox.removeItemAt(index);
+					DataPort newDataPort = dialog.createDataPort();
+					dataInPortComboBox.insertItemAt(newDataPort.get(DataPort.RTS_NAME), index);
+					dataPortList.add(newDataPort);
+					refresh();
+					return;
+				}
+			}
+		}
 	}
 
 	private void onAddDataOutPort() {
@@ -302,19 +340,41 @@ public class PAIOComponentCreationDialog extends JDialog {
 		if (dialog.doModal() == JOptionPane.OK_OPTION) {
 			DataPort dataPort = dialog.createDataPort();
 			this.dataPortList.add(dataPort);
-			setVisible(false);
 			dataOutPortComboBox.addItem(dataPort.get(DataPort.RTS_NAME));
-			pack();
-			setVisible(true);
+			refresh();
 		}
 	}
 
 	private void onDelDataOutPort() {
-
+		String name = (String)dataInPortComboBox.getSelectedItem();
+		int index = dataInPortComboBox.getSelectedIndex();
+		for(DataPort dataPort : dataPortList) {
+			if(dataPort.get(DataPort.RTS_NAME).equals(name)) {
+				dataOutPortComboBox.removeItemAt(index);
+				dataPortList.remove(dataPort);
+				refresh();
+				return;
+			}
+		}
 	}
 
 	private void onEditDataOutPort() {
-
+		String name = (String)dataOutPortComboBox.getSelectedItem();
+		int index = dataOutPortComboBox.getSelectedIndex();
+		for(DataPort dataPort : dataPortList) {
+			if(dataPort.get(DataPort.RTS_NAME).equals(name)) {
+				PAIODataPortCreationDialog dialog = new PAIODataPortCreationDialog("DataOutPort", dataPort);
+				if(dialog.doModal() == JOptionPane.OK_OPTION) {
+					dataPortList.remove(dataPort);
+					dataOutPortComboBox.removeItemAt(index);
+					DataPort newDataPort = dialog.createDataPort();
+					dataOutPortComboBox.insertItemAt(newDataPort.get(DataPort.RTS_NAME), index);
+					dataPortList.add(newDataPort);
+					refresh();
+					return;
+				}
+			}
+		}
 	}
 
 	private void onAddServicePort() {
