@@ -19,114 +19,102 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
-
 /**
  * 
- * <div lang="ja">
- * StateMachinePanelƒNƒ‰ƒX—p‚Ìƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[‚¨‚æ‚Ñ‚»‚Ìˆ—D
+ * <div lang="ja"> StateMachinePanelï¿½Nï¿½ï¿½ï¿½Xï¿½pï¿½Ìƒ|ï¿½bï¿½vï¿½Aï¿½bï¿½vï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½Ñ‚ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½D
  * 
- * ƒ|ƒbƒvƒAƒbƒvŠÖ˜A‚Ìˆ—‚Í‚Å‚«‚é‚¾‚¯‚±‚±‚É‹Lq‚·‚é‚æ‚¤‚É‚µ‚Ä‚¢‚Ü‚·D
+ * ï¿½|ï¿½bï¿½vï¿½Aï¿½bï¿½vï¿½Ö˜Aï¿½Ìï¿½ï¿½ï¿½ï¿½Í‚Å‚ï¿½ï¿½é‚¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É‹Lï¿½qï¿½ï¿½ï¿½ï¿½æ‚¤ï¿½É‚ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½D </div> <div lang="en">
+ * 
  * </div>
- * <div lang="en">
- *
- * </div>
+ * 
  * @author ysuga
- *
+ * 
  */
 public class RTSystemPanelPopupMenu {
 
 	/**
-	 * ƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[–{‘Ì
+	 * ï¿½|ï¿½bï¿½vï¿½Aï¿½bï¿½vï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½{ï¿½ï¿½
 	 */
 	private JPopupMenu popupMenu;
-	
+
 	/**
-	 * ƒpƒlƒ‹–{‘Ì
+	 * ï¿½pï¿½lï¿½ï¿½ï¿½{ï¿½ï¿½
 	 */
 	private RTSystemBuilderPanel panel;
-	
+
 	/**
-	 * ƒƒjƒ…[‚ÌˆÊ’u‚ğ•Û‘¶‚µ‚Ä‚¨‚­ƒoƒbƒtƒ@
+	 * ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½ÌˆÊ’uï¿½ï¿½Û‘ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½oï¿½bï¿½tï¿½@
 	 */
 	private Point location;
-	
+
 	/**
 	 * 
-	 * <div lang="ja">
-	 * ƒƒjƒ…[‚ÌˆÊ’u‚Ìæ“¾
-	 * @return ƒƒjƒ…[‚Ì•\¦‚³‚ê‚½ˆÊ’u
-	 * </div>
-	 * <div lang="en">
-	 *
-	 * @return
-	 * </div>
+	 * <div lang="ja"> ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½ÌˆÊ’uï¿½Ìæ“¾
+	 * 
+	 * @return ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Ì•\ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½Ê’u </div> <div lang="en">
+	 * 
+	 * @return </div>
 	 */
 	public Point getLocation() {
 		return location;
 	}
-	
+
 	/**
-	 * V‹KƒXƒe[ƒg’Ç‰Á‚Ì‚½‚ß‚ÌƒAƒNƒVƒ‡ƒ“ƒNƒ‰ƒX
+	 * ï¿½Vï¿½Kï¿½Xï¿½eï¿½[ï¿½gï¿½Ç‰ï¿½ï¿½Ì‚ï¿½ï¿½ß‚ÌƒAï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½X
+	 * 
 	 * @author ysuga
-	 *
+	 * 
 	 */
 	class AddNewStateAction extends AbstractAction {
 		private String kind;
+
 		public AddNewStateAction(String title, String kind) {
 			super(title);
 			this.kind = kind;
 		}
-		
+
 		public void actionPerformed(ActionEvent arg0) {
 			/**
-			ComponentSettingDialogFactory factory = ComponentSettingDialogFactoryManager.getInstance().get(kind);
-			AbstractComponentSettingDialog dialog = factory.createStateSettingDialog(panel, null);
-			if(dialog.doModal() == AbstractStateSettingDialog.OK_OPTION) {
-				State state = dialog.buildState();
-				try {
-					state.setLocation(getLocation());
-					panel.getStateMachine().add(state);
-					panel.repaint();
-				} catch (InvalidStateNameException e) {
-					JOptionPane.showMessageDialog(null, (Object)"Invalid State Name", "Exception", JOptionPane.OK_OPTION);
-				}
-			}
-			*/
-		}	
+			 * ComponentSettingDialogFactory factory =
+			 * ComponentSettingDialogFactoryManager.getInstance().get(kind);
+			 * AbstractComponentSettingDialog dialog =
+			 * factory.createStateSettingDialog(panel, null);
+			 * if(dialog.doModal() == AbstractStateSettingDialog.OK_OPTION) {
+			 * State state = dialog.buildState(); try {
+			 * state.setLocation(getLocation());
+			 * panel.getStateMachine().add(state); panel.repaint(); } catch
+			 * (InvalidStateNameException e) {
+			 * JOptionPane.showMessageDialog(null, (Object)"Invalid State Name",
+			 * "Exception", JOptionPane.OK_OPTION); } }
+			 */
+		}
 	}
-	
+
 	private JMenuItem buildConnectionMenuItem;
 	private JMenuItem refreshMenuItem;
-	private JMenuItem activateMenuItem; 
-	private JMenuItem deactivateMenuItem; 
-	private JMenuItem resetMenuItem; 
+	private JMenuItem activateMenuItem;
+	private JMenuItem deactivateMenuItem;
+	private JMenuItem resetMenuItem;
 	private JMenuItem newMenuItem;
 	private JMenuItem openMenuItem;
 	private JMenuItem saveMenuItem;
 	private JMenuItem saveAsMenuItem;
+
 	/**
-	 * <div lang="ja">
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * </div>
-	 * <div lang="en">
-	 * Constructor
-	 * </div>
+	 * <div lang="ja"> ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ </div> <div lang="en"> Constructor </div>
 	 */
 	public RTSystemPanelPopupMenu(final RTSystemBuilderPanel panel) {
 		this.panel = panel;
 	}
-	
-	
-	
+
 	/**
 	 * <div lang="ja">
-	 *
+	 * 
 	 * @param point
-	 * </div>
-	 * <div lang="en">
-	 *
+	 *            </div> <div lang="en">
+	 * 
 	 * @param point
-	 * </div>
+	 *            </div>
 	 */
 	public void show(Component component, Point point) {
 		popupMenu = new JPopupMenu();
@@ -137,8 +125,9 @@ public class RTSystemPanelPopupMenu {
 		});
 		popupMenu.add(refreshMenuItem);
 		popupMenu.add(new JSeparator());
-		
-		buildConnectionMenuItem = new JMenuItem(new AbstractAction("Restore All Connection") {
+
+		buildConnectionMenuItem = new JMenuItem(new AbstractAction(
+				"Restore All Connection") {
 			public void actionPerformed(ActionEvent e) {
 				onRestoreConnection();
 			}
@@ -151,115 +140,35 @@ public class RTSystemPanelPopupMenu {
 			}
 		});
 		popupMenu.add(activateMenuItem);
-		
-		deactivateMenuItem = new JMenuItem(new AbstractAction("All Deactivate") {
-			public void actionPerformed(ActionEvent e) {
-				onDeactivate();
-			}
-		});
+
+		deactivateMenuItem = new JMenuItem(
+				new AbstractAction("All Deactivate") {
+					public void actionPerformed(ActionEvent e) {
+						onDeactivate();
+					}
+				});
 		popupMenu.add(deactivateMenuItem);
-		
+
 		resetMenuItem = new JMenuItem(new AbstractAction("All Reset") {
 			public void actionPerformed(ActionEvent e) {
 				onReset();
 			}
 		});
 		popupMenu.add(resetMenuItem);
-		
-		/*
-
-		
-		if(panel.getRTSystemProfile().getExecutionState() != RTSystem.HALT) {
-			startMenuItem.setEnabled(false);
-		}
-		
-		suspendMenuItem = new JMenuItem(new AbstractAction("Suspend") {
-			public void actionPerformed(ActionEvent e) {
-				onSuspend();
-			}
-		});
-		
-		if(panel.getStateMachine().getExecutionState() != StateMachine.OPERATING) {
-			suspendMenuItem.setEnabled(false);
-		}
-		resumeMenuItem = new JMenuItem(new AbstractAction("Resume") {
-			public void actionPerformed(ActionEvent e) {
-				onResume();
-			}
-
-		});
-		if(panel.getStateMachine().getExecutionState() != StateMachine.SUSPEND) {
-			resumeMenuItem.setEnabled(false);
-		}
-		
-		stopMenuItem = new JMenuItem(new AbstractAction("Stop") {
-			public void actionPerformed(ActionEvent e) {
-				onStop();
-			}
-
-		});
-		if(panel.getStateMachine().getExecutionState() != StateMachine.OPERATING) {
-			stopMenuItem.setEnabled(false);
-		}
-		
-		popupMenu.add(startMenuItem);
-		popupMenu.add(suspendMenuItem);
-		popupMenu.add(resumeMenuItem);
-		popupMenu.add(stopMenuItem);
 
 		popupMenu.add(new JSeparator());
-		*/
-		
-		popupMenu.add(new JSeparator());
-		JMenuItem addComponentMenuItem = new JMenuItem(new AbstractAction("Add Component") {
+		JMenuItem addComponentMenuItem = new JMenuItem(new AbstractAction(
+				"Add Component") {
 			public void actionPerformed(ActionEvent e) {
-				/*
-				Component component = new StartState();
-				try {
-					state.setLocation(getLocation());
-					panel.getStateMachine().add(state);
-					panel.repaint();
-				} catch (InvalidStateNameException ex) {
-					JOptionPane.showMessageDialog(null, (Object)"Invalid State Name", "Exception", JOptionPane.OK_OPTION);
-				}
-				*/
+				onAddComponent();
 			}
+
 		});
-		/*
-		if(panel.getStateMachine().getState(StateMachineTagNames.START) != null) {
-			addStartMenuItem.setEnabled(false);
-		}
-		*/
+
 		popupMenu.add(addComponentMenuItem);
-		
-		/*
-		JMenuItem addExitMenuItem = new JMenuItem(new AbstractAction("Add Exit State") {
-			public void actionPerformed(ActionEvent e) {
-				State state = new ExitState();
-				try {
-					state.setLocation(getLocation());
-					panel.getStateMachine().add(state);
-					panel.repaint();
-				} catch (InvalidStateNameException ex) {
-					JOptionPane.showMessageDialog(null, (Object)"Invalid State Name", "Exception", JOptionPane.OK_OPTION);
-				}
-			}
-		});
-		if(panel.getStateMachine().getState(StateMachineTagNames.EXIT) != null) {
-			addExitMenuItem.setEnabled(false);
-		}
-		popupMenu.add(addExitMenuItem);
-		*/
-		/**
-		Set<String> kindSet = StateSettingDialogFactoryManager.getInstance().getKindList();
-		for(String kind : kindSet) {
-			JMenuItem addNewMenuItem = new JMenuItem(
-					new AddNewStateAction("Add New State(" + kind + ")", kind));
-			popupMenu.add(addNewMenuItem);
-		}
-		*/
+
 		popupMenu.add(new JSeparator());
-		
+
 		newMenuItem = new JMenuItem(new AbstractAction("New") {
 			public void actionPerformed(ActionEvent e) {
 				onNew();
@@ -271,12 +180,12 @@ public class RTSystemPanelPopupMenu {
 				onOpen();
 			}
 		});
-		saveMenuItem = new JMenuItem(new AbstractAction("Save"){
+		saveMenuItem = new JMenuItem(new AbstractAction("Save") {
 			public void actionPerformed(ActionEvent e) {
 				onSave();
 			}
 		});
-		saveAsMenuItem = new JMenuItem(new AbstractAction("Save As..."){
+		saveAsMenuItem = new JMenuItem(new AbstractAction("Save As...") {
 			public void actionPerformed(ActionEvent e) {
 				onSaveAs();
 			}
@@ -285,64 +194,64 @@ public class RTSystemPanelPopupMenu {
 		popupMenu.add(openMenuItem);
 		popupMenu.add(saveMenuItem);
 		popupMenu.add(saveAsMenuItem);
-				
+
 		location = point;
 		popupMenu.show(component, point.x, point.y);
 	}
 
 	/**
 	 * 
-	 * onNew
-	 * <div lang="ja">
+	 * onNew <div lang="ja">
 	 * 
-	 * </div>
-	 * <div lang="en">
-	 *
+	 * </div> <div lang="en">
+	 * 
 	 * </div>
 	 */
 	public void onNew() {
 		panel.createRTSystemProfile("");
 	}
-	
+
 	/**
 	 * 
-	 * open
-	 * <div lang="ja">
-	 * ƒtƒ@ƒCƒ‹‘I‘ğƒ_ƒCƒAƒƒO‚ğ•\¦‚³‚¹‚ÄCStateMachine‚ğŠJ‚«‚Ü‚·D
-	 * </div>
-	 * <div lang="en">
-	 *
+	 * open <div lang="ja">
+	 * ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½_ï¿½Cï¿½Aï¿½ï¿½ï¿½Oï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄCStateMachineï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½Ü‚ï¿½ï¿½D </div> <div
+	 * lang="en">
+	 * 
 	 * </div>
 	 */
 	public void onOpen() {
 		panel.showOpenFileDialog();
 	}
-	
+
 	public void onSave() {
 		panel.save();
 	}
-	
+
 	public void onSaveAs() {
 		panel.showSaveFileDialog();
 	}
-	
+
 	public void onRefresh() {
 		panel.refresh();
 	}
-	
+
 	public void onActivate() {
 		panel.activate();
 	}
-	
+
 	public void onDeactivate() {
 		panel.deactivate();
 	}
-	
+
 	public void onReset() {
 		panel.reset();
 	}
-	
+
 	private void onRestoreConnection() {
 		panel.restoreConnection();
+	}
+
+	private void onAddComponent() {
+		panel.addComponent(this.getLocation());
 	}
 }

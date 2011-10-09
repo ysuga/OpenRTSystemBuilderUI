@@ -15,6 +15,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import net.ysuga.rtsbuilder.RTSystemBuilder;
 import net.ysuga.rtsbuilder.ui.shape.ConnectorShape;
 import net.ysuga.rtsystem.profile.DataPortConnector;
 
@@ -64,7 +65,13 @@ public class ConnectorPopupMenu {
 		JMenuItem refreshMenuItem = new JMenuItem(
 				new AbstractAction("Refresh") {
 					public void actionPerformed(ActionEvent arg0) {
-						onRefresh();
+						
+						try {
+							onRefresh();
+						} catch (Exception e) {
+							// TODO 自動生成された catch ブロック
+							e.printStackTrace();
+						}
 					}
 				});
 		popupMenu.add(refreshMenuItem);
@@ -79,8 +86,9 @@ public class ConnectorPopupMenu {
 		popupMenu.show(panel, point.x, point.y);
 	}
 
-	private void onRefresh() {
-		
+	private void onRefresh() throws Exception {
+		ConnectorShape cs = panel.getRTSystemShape().getSelectedConnectorShape();
+		RTSystemBuilder.connect(cs.getConnector());
 	}
 	
 	private void onAutoPivot() {

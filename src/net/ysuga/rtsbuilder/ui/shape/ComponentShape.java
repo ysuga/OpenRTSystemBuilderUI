@@ -18,8 +18,9 @@ import java.util.Set;
 
 import net.ysuga.rtsbuilder.ui.RTSystemBuilderPanel;
 import net.ysuga.rtsystem.profile.Component;
-import net.ysuga.rtsystem.profile.Component.DataPort;
+import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.Location;
+import net.ysuga.rtsystem.profile.RTSObject;
 import net.ysuga.rtsystem.profile.RTSProperties;
 
 /**
@@ -32,7 +33,7 @@ import net.ysuga.rtsystem.profile.RTSProperties;
  * @author ysuga
  * 
  */
-public class ComponentShape implements ModelShape {
+public class ComponentShape implements RTSObjectShape {
 
 	private NamedBox box;
 	private Component component;
@@ -61,7 +62,7 @@ public class ComponentShape implements ModelShape {
 	}
 
 	/**
-	 * <div lang="ja"> ƒRƒ“ƒXƒgƒ‰ƒNƒ^ </div> <div lang="en"> Constructor </div>
+	 * <div lang="ja"> ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ </div> <div lang="en"> Constructor </div>
 	 */
 	public ComponentShape(Component component) {
 		int x = Integer.parseInt(component.location.get(Location.RTS_EXT_X));
@@ -95,7 +96,7 @@ public class ComponentShape implements ModelShape {
 	 * 
 	 * @return </div>
 	 */
-	public Component getComponent() {
+	public RTSObject getRTSObject() {
 		return component;
 	}
 
@@ -110,27 +111,14 @@ public class ComponentShape implements ModelShape {
 	 * @param arg0
 	 *            </div>
 	 */
-	public static void onClicked(RTSystemBuilderPanel panel, MouseEvent arg0) {
+	public void onClicked(RTSystemBuilderPanel panel, MouseEvent arg0) {
 		if (arg0.getButton() == MouseEvent.BUTTON3) { // RightClick
-			panel.getRTComponentPopupMenu().show(panel, arg0.getPoint());
+			ComponentPopupMenu popup = new ComponentPopupMenu(panel, this);
+			popup.show(arg0.getPoint());
 		}
 
 		if (arg0.getButton() == MouseEvent.BUTTON1 && arg0.getClickCount() == 2) { // onDoubleClicked
 
-			/**
-			 * StateSettingDialogFactory factory =
-			 * StateSettingDialogFactoryManager
-			 * .getInstance().get(panel.getSelectedState().getKind()); if
-			 * (factory != null) { AbstractStateSettingDialog dialog = factory
-			 * .createStateSettingDialog(panel, panel.getSelectedState()); if
-			 * (dialog.doModal() == AbstractStateSettingDialog.OK_OPTION) {
-			 * State state = dialog.buildState(); try {
-			 * panel.getStateMachine().replace( panel.getSelectedState(),
-			 * state); panel.setSelectedState(state); panel.repaint(); } catch
-			 * (InvalidStateNameException ex) {
-			 * JOptionPane.showMessageDialog(null, (Object)
-			 * "Invalid State Name", "Exception", JOptionPane.OK_OPTION); } } }
-			 */
 		}
 	}
 
@@ -146,7 +134,7 @@ public class ComponentShape implements ModelShape {
 		Color textColor;
 		Color bgColor;
 		Color boxColor;
-		switch (getComponent().getState()) {
+		switch (getRTSObject().getState()) {
 		case RTSProperties.OFFLINE:
 			textColor = Color.black;
 			bgColor = Color.white;
@@ -200,8 +188,6 @@ public class ComponentShape implements ModelShape {
 		boolean flag = box.contains(p);
 		return flag;
 	}
-	
-	
 
 	/**
 	 * <div lang="ja">

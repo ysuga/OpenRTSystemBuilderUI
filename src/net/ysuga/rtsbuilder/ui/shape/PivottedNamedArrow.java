@@ -54,9 +54,21 @@ public class PivottedNamedArrow {
 		}		
 	}
 
-	
+	/**
+	 * 
+	 * lineContains
+	 * 
+	 * Test that point P stands nearby the line from (x1, y1) to (x2, y2).
+	 *
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @param p
+	 * @return
+	 */
 	static final public boolean lineContains(int x1, int y1, int x2, int y2, Point p) {
-		double w = 10;
+		double w = 20;
 		double x = p.x;
 		double y = p.y;
 		

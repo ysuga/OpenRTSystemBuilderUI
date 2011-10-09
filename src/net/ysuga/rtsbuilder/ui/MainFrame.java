@@ -29,15 +29,19 @@ public class MainFrame extends JFrame implements Runnable {
 
 	private long refreshInterval = 500; // milliseconds
 
-	private RTSystemBuilderPanel rtSystemBuilderPanel;
+	protected RTSystemBuilderPanel rtSystemBuilderPanel;
 	
-	private RTSystemTreeView rtSystemTreeView;
+	protected RTSystemTreeView rtSystemTreeView;
 	
-	private JSplitPane scrollPane;
+	protected JSplitPane scrollPane;
 
 	private Thread refreshThread;
 
 	private MainFrameMouseAdapter mouseAdapter;
+	
+	public RTSystemBuilderPanel createRTSystemBuilderPanel() throws ParserConfigurationException {
+		 return new RTSystemBuilderPanel();
+	}
 	/**
 	 * Constructor
 	 * 
@@ -46,7 +50,8 @@ public class MainFrame extends JFrame implements Runnable {
 	public MainFrame() throws HeadlessException {
 		super("RT System Builder");
 		try {
-			rtSystemBuilderPanel = new RTSystemBuilderPanel();
+			rtSystemBuilderPanel = createRTSystemBuilderPanel();
+			
 			rtSystemTreeView = new RTSystemTreeView();
 			scrollPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, rtSystemTreeView,
 					rtSystemBuilderPanel);
@@ -64,11 +69,16 @@ public class MainFrame extends JFrame implements Runnable {
 		RTSystemProfile profile = rtSystemBuilderPanel.getRTSystemProfile();
 
 		refreshThread = new Thread(this);
-		refreshThread.start();
+
 
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(500, 500);
-		setVisible(true);
+
+	}
+	
+	@Override
+	public void setVisible(boolean flag) {
+		super.setVisible(flag);
+		refreshThread.start();	
 	}
 
 	/**

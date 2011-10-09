@@ -24,10 +24,12 @@ import javax.swing.JTextField;
 import net.ysuga.corbanaming.ui.GridLayoutPanel;
 import net.ysuga.rtsbuilder.RTSystemBuilder;
 import net.ysuga.rtsystem.profile.Component;
-import net.ysuga.rtsystem.profile.Component.DataPort;
+import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.Properties;
 import net.ysuga.rtsystem.profile.ServicePortConnector;
+
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 /**
  * <div lang="ja">
@@ -89,9 +91,13 @@ public class ConnectionDialog extends JDialog {
 		if (validConnection) {
 			dataType = RTSystemBuilder.getDataType(sourceComponent,
 					sourceDataPort);
+			try {
 			interfaceName = RTSystemBuilder.getConnectionServiceInterfaceName(
 					sourceComponent, sourceDataPort, targetComponent,
 					targetDataPort);
+			} catch (NotFound e) {
+				System.out.println("Not Found");
+			}
 		}
 	}
 
@@ -212,10 +218,10 @@ public class ConnectionDialog extends JDialog {
 					(String) subscriptionTypeComboBox.getSelectedItem());
 		}
 		
-		connector.sourcePort = connector.new Port(this.sourceDataPort.get(Component.DataPort.RTS_NAME),
+		connector.sourcePort = connector.new Port(this.sourceDataPort.get(DataPort.RTS_NAME),
 				this.sourceComponent.get(Component.INSTANCE_NAME), this.sourceComponent.get(Component.ID));
 		connector.sourcePort.properties = new Properties("COMPONENT_PATH_ID", sourceComponent.get(Component.PATH_URI));
-		connector.targetPort = connector.new Port(this.targetDataPort.get(Component.DataPort.RTS_NAME),
+		connector.targetPort = connector.new Port(this.targetDataPort.get(DataPort.RTS_NAME),
 				this.targetComponent.get(Component.INSTANCE_NAME), this.targetComponent.get(Component.ID));
 		connector.targetPort.properties = new Properties("COMPONENT_PATH_ID", targetComponent.get(Component.PATH_URI));
 		
@@ -230,10 +236,10 @@ public class ConnectionDialog extends JDialog {
 		ServicePortConnector connector;
 			connector = new ServicePortConnector(connectionIdField.getText(),
 					connectionNameField.getText());
-			connector.sourcePort = connector.new Port(this.sourceDataPort.get(Component.DataPort.RTS_NAME),
+			connector.sourcePort = connector.new Port(this.sourceDataPort.get(DataPort.RTS_NAME),
 					this.sourceComponent.get(Component.INSTANCE_NAME), this.sourceComponent.get(Component.ID));
 			connector.sourcePort.properties = new Properties("COMPONENT_PATH_ID", sourceComponent.get(Component.PATH_URI));
-			connector.targetPort = connector.new Port(this.targetDataPort.get(Component.DataPort.RTS_NAME),
+			connector.targetPort = connector.new Port(this.targetDataPort.get(DataPort.RTS_NAME),
 					this.targetComponent.get(Component.INSTANCE_NAME), this.targetComponent.get(Component.ID));
 			connector.targetPort.properties = new Properties("COMPONENT_PATH_ID", targetComponent.get(Component.PATH_URI));
 		return  connector;

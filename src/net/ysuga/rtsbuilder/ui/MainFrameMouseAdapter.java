@@ -105,9 +105,7 @@ public class MainFrameMouseAdapter implements MouseMotionListener, MouseListener
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
-		System.out.print("Press(" + e.getPoint() + ") :");
 		if (e.getSource() == mainFrame.getRtSystemTreeView().getTree()) {
-			System.out.println("Tree!");
 			JTree tree = mainFrame.getRtSystemTreeView().getTree();
 			///TreeModel model = tree.getModel();
 
@@ -119,8 +117,7 @@ public class MainFrameMouseAdapter implements MouseMotionListener, MouseListener
 				System.out.println(obj);
 				if (obj instanceof RTSTreeNode) {
 					selectedNode = (RTSTreeNode) obj;
-					System.out.println(selectedNode);
-//					((RTSTreeNode) obj).onClicked(e);
+					((RTSTreeNode) obj).onClicked(e);
 				}
 			}
 		} else if(e.getSource() == mainFrame.getRtSystemBuilderPanel()){
@@ -134,12 +131,10 @@ public class MainFrameMouseAdapter implements MouseMotionListener, MouseListener
 	 * @param e
 	 */
 	public void mouseReleased(MouseEvent e) {
-		System.out.print("Release(" + e.getPoint() + ") :");
 		if (e.getSource() == mainFrame.getRtSystemTreeView().getTree()) {
 			if (selectedNode != null) {
 				
 				if(contains(mainFrame.getRtSystemBuilderPanel(), e)) {
-					System.out.println("Dropped:" + selectedNode.getFullPath());
 					try {
 						Point mousePoint = e.getLocationOnScreen();
 						Point origin = mainFrame.getRtSystemBuilderPanel().getLocationOnScreen();

@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
+import net.ysuga.rtsbuilder.ui.RTSystemBuilderPanel;
 import net.ysuga.rtsystem.profile.PivotList;
 import net.ysuga.rtsystem.profile.PortConnector;
 import net.ysuga.rtsystem.profile.RTSProperties;
@@ -276,42 +277,27 @@ public class ConnectorShape  {
 	}
 	
 	public void onMousePressed(MouseEvent arg0) {
-		System.out.println("Mouse Pressed");
-		Point mp = arg0.getPoint();
-		setSelectedPivot(null);
-		double nearestDistance = Double.MAX_VALUE;
-		//PivotList pivotList = transition.getPivotList();
-		for(Point p : getPivotList()) {
-			double dist = Math.sqrt((p.x - mp.x) * (p.x - mp.x) + (p.y - mp.y) * (p.y - mp.y));
-			if(dist < nearestDistance) {
-				setSelectedPivot(p);
-				nearestDistance = dist;
-			}
-			/**
-			double dist = Math.sqrt((p.x - mp.x) * (p.x - mp.x) + (p.y - mp.y) * (p.y - mp.y));
-			if(dist < 10) {
-				selectedPivot = p;
-			}*/
-			
-		}
-		/*
-		if(selectedPivot == null) {
-			System.out.println("selectedPivot is null");
-			
-			selectedPivot = new Point(mp.x, mp.y);
-			
-			Point oldPoint = arrow.getStartPoint();
-			for(int i = 0;i < connector.getPivotList().size();i++) {
-				Point p = connector.getPivotList().get(i);
-				if(PivottedNamedArrow.lineContains(oldPoint.x, oldPoint.y, p.x, p.y, mp)) {
-					connector.getPivotList().add(i, selectedPivot);
-					return;
+		if(arg0.getButton() == MouseEvent.BUTTON1) {
+			setSelectedPivot(null);
+			Point mp = arg0.getPoint();
+			double nearestDistance = Double.MAX_VALUE;
+			for(Point p : getPivotList()) {
+				double dist = Math.sqrt((p.x - mp.x) * (p.x - mp.x) + (p.y - mp.y) * (p.y - mp.y));
+				if(dist < nearestDistance) {
+					setSelectedPivot(p);
+					nearestDistance = dist;
 				}
-				oldPoint = p;
 			}
-			connector.getPivotList().add(selectedPivot);
-		}*/
-	//	System.out.println("Connector("+this.toString()+") selectedPivot=" + selectedPivot);
+		} else {
+/*
+		} else if (arg0.getButton() == MouseEvent.BUTTON3) {
+			panel.setEditMode(RTSystemBuilderPanel.EDIT_NORMAL);
+			panel.getConnectorPopupMenu().show(panel, arg0.getPoint());
+			panel.repaint();
+			return;
+		}
+		*/
+		}
 	}
 	
 	public void onMouseDragged(MouseEvent arg0) {
@@ -452,6 +438,16 @@ public class ConnectorShape  {
 				getPivotList().add(new Point(pivotX, distPoint.y));
 			}
 		}
+		
+	}
+	/**
+	 * onClicked
+	 *
+	 * @param panel
+	 * @param arg0
+	 */
+	public void onClicked(RTSystemBuilderPanel panel, MouseEvent arg0) {
+		// TODO 自動生成されたメソッド・スタブ
 		
 	}
 

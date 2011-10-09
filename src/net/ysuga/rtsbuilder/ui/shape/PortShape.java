@@ -13,10 +13,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
 
-import net.ysuga.rtsystem.profile.Component.DataPort;
+import net.ysuga.rtsystem.profile.DataPort;
 
 /**
  * <div lang="ja">
@@ -28,7 +26,7 @@ import net.ysuga.rtsystem.profile.Component.DataPort;
  * @author ysuga
  * 
  */
-public class PortShape implements ModelShape {
+public class PortShape  {
 
 	private DataPort dataPort;
 
@@ -45,6 +43,7 @@ public class PortShape implements ModelShape {
 	public final static int SIDE_RIGHT = 0;
 	public final static int SIDE_LEFT = 1;
 	public int side;
+	private ComponentShape componentShape;
 	
 	public int getSide() {
 		return side;
@@ -131,6 +130,7 @@ public class PortShape implements ModelShape {
 	 * @param dataPort
 	 */
 	public PortShape(DataPort dataPort, ComponentShape component) {
+		this.setComponentShape(component);
 		this.dataPort = dataPort;
 		Rectangle rect = component.getBounds();
 
@@ -262,5 +262,21 @@ public class PortShape implements ModelShape {
 	public double getY() {
 		return shape.getBounds().getY();
 	}
+
+	/**
+	 * @return componentShape
+	 */
+	public ComponentShape getComponentShape() {
+		return componentShape;
+	}
+
+	/**
+	 * @param componentShape set componentShape
+	 */
+	public void setComponentShape(ComponentShape componentShape) {
+		this.componentShape = componentShape;
+	}
+
+
 
 }

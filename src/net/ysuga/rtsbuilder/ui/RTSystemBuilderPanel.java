@@ -23,12 +23,15 @@ import javax.swing.JPanel;
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.ysuga.rtsbuilder.RTSystemBuilder;
+import net.ysuga.rtsbuilder.ui.paio.PAIOComponentCreationDialog;
+import net.ysuga.rtsbuilder.ui.shape.ComponentPopupMenu;
 import net.ysuga.rtsbuilder.ui.shape.ConnectorShape;
 import net.ysuga.rtsbuilder.ui.shape.RTSystemShape;
 import net.ysuga.rtsbuilder.ui.shape.RTSystemShapeBuilder;
 import net.ysuga.rtsystem.profile.Component;
-import net.ysuga.rtsystem.profile.Component.DataPort;
+import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.PortConnector;
+import net.ysuga.rtsystem.profile.RTSObject;
 import net.ysuga.rtsystem.profile.RTSystemProfile;
 
 import org.xml.sax.SAXException;
@@ -105,7 +108,7 @@ public class RTSystemBuilderPanel extends JPanel {
 	/**
 	 * selected state (state can be selected by clicking)
 	 */
-	private Component selectedComponent;
+	private RTSObject selectedRTSObject;
 
 	/**
 	 * 
@@ -115,8 +118,8 @@ public class RTSystemBuilderPanel extends JPanel {
 	 *         selected state
 	 * @return State object. If not selected, null will be returned. </div>
 	 */
-	final public Component getSelectedComponent() {
-		return selectedComponent;
+	final public RTSObject getSelectedRTSObject() {
+		return selectedRTSObject;
 	}
 
 	/**
@@ -129,9 +132,9 @@ public class RTSystemBuilderPanel extends JPanel {
 	 * @param state
 	 *            </div>
 	 */
-	final public void setSelectedComponent(Component comp) {
+	final public void setSelectedRTSObjectt(RTSObject comp) {
 		selectedConnector = null;
-		selectedComponent = comp;
+		selectedRTSObject = comp;
 	}
 
 	/**
@@ -163,7 +166,7 @@ public class RTSystemBuilderPanel extends JPanel {
 	 */
 	public void setSelectedConnector(PortConnector connector) {
 		selectedConnector = connector;
-		selectedComponent = null;
+		selectedRTSObject = null;
 	}
 
 	/**
@@ -179,11 +182,11 @@ public class RTSystemBuilderPanel extends JPanel {
 		return selectedPivot;
 	}
 
-	private ComponentPopupMenu componentPopupMenu;
+	//private ComponentPopupMenu componentPopupMenu;
 
-	public ComponentPopupMenu getRTComponentPopupMenu() {
-		return componentPopupMenu;
-	}
+	//public ComponentPopupMenu getRTComponentPopupMenu() {
+	//	return componentPopupMenu;
+	//}
 
 	private RTSystemPanelPopupMenu rtSystemPanelPopupMenu;
 	private ConnectorPopupMenu connectorPopupMenu;
@@ -201,14 +204,13 @@ public class RTSystemBuilderPanel extends JPanel {
 	 */
 	public RTSystemBuilderPanel() throws ParserConfigurationException {
 		this.rtSystemProfile = createRTSystemProfile("new state machine");
-		this.rtSystemShape = RTSystemShapeBuilder
-				.buildRTSystemShape(rtSystemProfile);
+		this.rtSystemShape = buildRTSystemShape(rtSystemProfile);
 
 		RTSystemPanelMouseAdapter adapter = new RTSystemPanelMouseAdapter(this);
 		super.addMouseListener(adapter);
 		super.addMouseMotionListener(adapter);
 
-		this.componentPopupMenu = new ComponentPopupMenu(this);
+		//this.componentPopupMenu = new ComponentPopupMenu(this);
 		this.connectorPopupMenu = new ConnectorPopupMenu(this);
 		this.rtSystemPanelPopupMenu = new RTSystemPanelPopupMenu(this);
 		
@@ -235,10 +237,14 @@ public class RTSystemBuilderPanel extends JPanel {
 	 * @param string
 	 * @return </div>
 	 */
-	RTSystemProfile createRTSystemProfile(String string) {
+	public RTSystemProfile createRTSystemProfile(String string) {
 		return new RTSystemProfile(string, "default vendor", "default version");
 	}
 
+	public RTSystemShape buildRTSystemShape(RTSystemProfile rtSystemProfile) {
+		
+		return new RTSystemShapeBuilder().buildRTSystemShape(rtSystemProfile);
+	}
 	/**
 	 * 
 	 * <div lang="ja">
@@ -257,9 +263,8 @@ public class RTSystemBuilderPanel extends JPanel {
 		g2d.fill(r);
 		g2d.setColor(Color.black);
 
-		this.rtSystemShape = RTSystemShapeBuilder
-				.buildRTSystemShape(rtSystemProfile);
-		rtSystemShape.setSelectedComponent(selectedComponent);
+		this.rtSystemShape = buildRTSystemShape(rtSystemProfile);
+		rtSystemShape.setSelectedComponent(selectedRTSObject);
 		rtSystemShape.setSelectedConnector(selectedConnector);
 		rtSystemShape.setSelectedDataPort(selectedDataPort);
 		rtSystemShape.draw(g);
@@ -635,5 +640,24 @@ public class RTSystemBuilderPanel extends JPanel {
 		component.setLocation(point);
 		this.rtSystemProfile.addComponent(component);
 		RTSystemBuilder.findComponent(component);
+	}
+
+	/**
+	 * addComponent
+	 * @param point 
+	 *
+	 */
+	public void addComponent(Point point) {
+		PAIOComponentCreationDialog dialog = new PAIOComponentCreationDialog();
+		if(dialog.doModal() == JOptionPane.OK_OPTION) {
+			try {
+				Component component = dialog.createComponent();
+				component.setLocation(point);
+				this.getRTSystemProfile().addComponent(component);
+				refresh();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+		}
 	}
 }

@@ -22,7 +22,9 @@ public class MainFrameTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new MainFrame();
+		MainFrame frame = new MainFrame();
+		frame.setSize(500, 500);
+		frame.setVisible(true);
 	}
 
 }
