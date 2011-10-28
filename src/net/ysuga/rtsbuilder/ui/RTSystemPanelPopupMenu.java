@@ -118,6 +118,17 @@ public class RTSystemPanelPopupMenu {
 	 */
 	public void show(Component component, Point point) {
 		popupMenu = new JPopupMenu();
+		JMenuItem addComponentMenuItem = new JMenuItem(new AbstractAction(
+				"Create PyIO Component") {
+			public void actionPerformed(ActionEvent e) {
+				onAddComponent();
+			}
+
+		});
+		popupMenu.add(addComponentMenuItem);
+
+		popupMenu.add(new JSeparator());
+		
 		refreshMenuItem = new JMenuItem(new AbstractAction("Refresh All") {
 			public void actionPerformed(ActionEvent e) {
 				onRefresh();
@@ -157,17 +168,7 @@ public class RTSystemPanelPopupMenu {
 		popupMenu.add(resetMenuItem);
 
 		popupMenu.add(new JSeparator());
-		JMenuItem addComponentMenuItem = new JMenuItem(new AbstractAction(
-				"Add Component") {
-			public void actionPerformed(ActionEvent e) {
-				onAddComponent();
-			}
 
-		});
-
-		popupMenu.add(addComponentMenuItem);
-
-		popupMenu.add(new JSeparator());
 
 		newMenuItem = new JMenuItem(new AbstractAction("New") {
 			public void actionPerformed(ActionEvent e) {

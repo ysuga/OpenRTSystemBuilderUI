@@ -15,7 +15,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import net.ysuga.rtsystem.profile.DataPort;
-import net.ysuga.rtsystem.profile.PAIOComponent;
+import net.ysuga.rtsystem.profile.PyIOComponent;
 
 /**
  * 
@@ -34,7 +34,7 @@ public class PyIOConfigurationTree extends JTree {
 	 * 
 	 * @param component
 	 */
-	public PyIOConfigurationTree(PAIOComponent component) {
+	public PyIOConfigurationTree(PyIOComponent component) {
 		super();
 		rootNode = new DefaultMutableTreeNode("DataFlowComponent");
 
@@ -48,31 +48,18 @@ public class PyIOConfigurationTree extends JTree {
 		rootNode.add(servicePortNode);
 		for (DataPort dataPort : (Set<DataPort>) component.dataPortSet) {
 			if (dataPort.getDirection() == DataPort.DIRECTION_IN) {
-				dataInPortNode.add(new DefaultMutableTreeNode(dataPort
-						.getPlainName()
-						+ ":"
-						+ dataPort.getDataType()
-						+ ":"
-						+ "DataInPort"));
-
+				dataInPortNode.add(new PyIOConfigurationNode(dataPort));
 			} else if (dataPort.getDirection() == DataPort.DIRECTION_OUT) {
-				dataOutPortNode.add(new DefaultMutableTreeNode(dataPort
-						.getPlainName()
-						+ ":"
-						+ dataPort.getDataType()
-						+ ":"
-						+ "DataOutPort"));
-
+				dataOutPortNode.add(new PyIOConfigurationNode(dataPort));
 			} else{
-				servicePortNode.add(new DefaultMutableTreeNode(dataPort
-						.getPlainName()
-						+ ":"
-						+ dataPort.getDataType()
-						+ ":"
-						+ "ServicePort"));
-
+				servicePortNode.add(new PyIOConfigurationNode(dataPort));
 			}
 		}
+		this.expandRow(0);
+
+		this.expandRow(2);
+
+		this.expandRow(1);
 	}
 
 }

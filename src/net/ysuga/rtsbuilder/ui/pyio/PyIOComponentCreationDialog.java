@@ -9,6 +9,8 @@
 package net.ysuga.rtsbuilder.ui.pyio;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -25,17 +28,18 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import net.ysuga.corbanaming.ui.GridLayoutPanel;
-import net.ysuga.rtsystem.profile.Component;
+import net.ysuga.rtsbuilder.ui.MainFrame;
 import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.ExecutionContext;
-import net.ysuga.rtsystem.profile.PAIOComponent;
+import net.ysuga.rtsystem.profile.PyIOComponent;
+import net.ysuga.rtsystem.profile.RTComponent;
 
 /**
  * 
  * @author ysuga
  * 
  */
-public class PAIOComponentCreationDialog extends JDialog {
+public class PyIOComponentCreationDialog extends JDialog {
 
 	private JTextField moduleNameField;
 	// private JTextField moduleDescField;
@@ -50,12 +54,16 @@ public class PAIOComponentCreationDialog extends JDialog {
 	private JComboBox dataInPortComboBox;
 	private JComboBox dataOutPortComboBox;
 	private JComboBox servicePortComboBox;
+	
+	private String onExecuteCode;
+	private String onActivatedCode;
+	private String onDeactivatedCode;
 
 	// private JTextField moduleCompTypeField;
 	// private JTextField moduleActTypeField;
 	// private JTextField moduleMaxInstanceField;
 
-	public PAIOComponentCreationDialog() {
+	public PyIOComponentCreationDialog() {
 		this("ModuleName", "localhost", "%n.rtc", "100", "ModuleVendor", "1.0", "Category");
 	}
 	
@@ -70,7 +78,7 @@ public class PAIOComponentCreationDialog extends JDialog {
 	 *            </div>
 	 * @throws Exception
 	 */
-	public PAIOComponentCreationDialog(String moduleName, String nameServer,
+	public PyIOComponentCreationDialog(String moduleName, String nameServer,
 			String namingContext, String executionRate, String vendor, String version, String category) {
 		super();
 
@@ -91,7 +99,7 @@ public class PAIOComponentCreationDialog extends JDialog {
 		dataPortList = new ArrayList<DataPort>();
 	}
 
-	public PAIOComponentCreationDialog(PAIOComponent component) {
+	public PyIOComponentCreationDialog(PyIOComponent component) {
 		this(component.getModuleName(), component.getNameServer(), component.getNamingContext(), 
 				component.getExecutionRate(), component.getVendor(), component.getVersion(), component.getCategory());
 		
@@ -105,6 +113,10 @@ public class PAIOComponentCreationDialog extends JDialog {
 			}
 			this.dataPortList.add(dataPort);
 		}
+		
+		onExecuteCode = component.getOnExecuteCode();
+		onActivatedCode = component.getOnActivatedCode();
+		onDeactivatedCode = component.getOnDeactivatedCode();
 	}
 	
 	
@@ -139,7 +151,16 @@ public class PAIOComponentCreationDialog extends JDialog {
 		GridLayoutPanel panel = new GridLayoutPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
 
+		contentPane.add(Box.createVerticalStrut(20), BorderLayout.NORTH); 
+		contentPane.add(Box.createVerticalStrut(20), BorderLayout.SOUTH); 
+		contentPane.add(Box.createHorizontalStrut(20), BorderLayout.WEST); 
+		contentPane.add(Box.createHorizontalStrut(20), BorderLayout.EAST); 
+		
 		int line = 0;
+		
+		panel.addComponent(0, line, 10, 0, 5, 1, new JLabel("Input PyIO Component Initial Parameters."));
+		line++;
+		
 		panel.addComponent(0, line, 0, 0, 1, 1, new JLabel("Module Name"));
 		panel.addComponent(1, line, 10, 0, 4, 1, moduleNameField);
 		line++;
@@ -234,7 +255,20 @@ public class PAIOComponentCreationDialog extends JDialog {
 		}));
 		line++;
 
-		contentPane.add(okButton, BorderLayout.SOUTH);
+		panel.addComponent(0, line, 0, 0, 1, 1, new JLabel(""));
+		panel.addComponent(1, line, 10, 0, 1, 1,Box.createHorizontalStrut(60));
+		panel.addComponent(2, line, 0, 0, 1, 1, new JLabel(""));
+		panel.addComponent(3, line, 0, 0, 1, 1,new JButton(new AbstractAction("Cancel") {
+			public void actionPerformed(ActionEvent e) {
+				onCancel();
+			}
+		}));
+		panel.addComponent(4, line, 0, 0, 1, 1,new JButton(new AbstractAction("OK") {
+			public void actionPerformed(ActionEvent e) {
+				onOk(e);
+			}
+		}));
+		
 		okButton.setRequestFocusEnabled(true);
 
 	}
@@ -242,6 +276,10 @@ public class PAIOComponentCreationDialog extends JDialog {
 	public int doModal() {
 		initPanel();
 		pack();
+		Point mainLocation = MainFrame.getInstance().getLocation();
+		Dimension mainSize = MainFrame.getInstance().getSize();
+		Dimension thisSize = getSize();
+		super.setLocation(mainLocation.x+mainSize.width/2-thisSize.width/2, mainLocation.y + mainSize.height/2 - thisSize.height/2);
 		setModal(true);
 		setVisible(true);
 		return exitOption;
@@ -253,7 +291,7 @@ public class PAIOComponentCreationDialog extends JDialog {
 	 * @return
 	 * @throws IOException
 	 */
-	public Component createComponent() throws IOException {
+	public RTComponent createComponent() throws IOException {
 		String Id = "RTC:" + moduleVendorField.getText() + ":"
 				+ moduleCategoryField.getText() + ":"
 				+ moduleNameField.getText() + ":"
@@ -264,25 +302,38 @@ public class PAIOComponentCreationDialog extends JDialog {
 		}
 		pathUri = pathUri + moduleNameField.getText() + "0.rtc";
 		String instanceName = this.moduleNameField.getText() + "0";
-		PAIOComponent component = new PAIOComponent(
+		PyIOComponent component = new PyIOComponent(
 				instanceName, pathUri, Id);
 
-		component.setNamingContext(namingContextField.getText());
 		component.executionContextSet.add(new ExecutionContext("0",
 				"rtsExt:execution_context_ext", "PERIODIC",
 				this.executionRateField.getText()));
 		
 		for (DataPort port : dataPortList) {
-			String remappedName = instanceName + "." + port.getPlainName();
+			//String remappedName = instanceName + "." + port.getPlainName();
+			String remappedName =  "." + port.getPlainName(); // Port Naming Bug. This will be fixed in 1.1 Release.
 			port.put(DataPort.RTS_NAME, remappedName);
 			component.dataPortSet.add(port);
 		}
-
+		
+		component.setPeriodicRate(this.executionRateField.getText());
+		component.setNamingContext(this.namingContextField.getText());
+		component.setNameServers(this.nameServerField.getText());
+		
+		if(onExecuteCode != null) {
+			component.setOnExecuteCode(onExecuteCode);
+		}
+		if(onActivatedCode != null) {
+			component.setOnActivatedCode(onActivatedCode);
+		}
+		if(onDeactivatedCode != null) {
+			component.setOnDeactivatedCode(onDeactivatedCode);
+		}
 		return component;
 	}
 
 	private void onAddDataInPort() {
-		PAIODataPortCreationDialog dialog = new PAIODataPortCreationDialog(
+		PyIODataPortCreationDialog dialog = new PyIODataPortCreationDialog(
 				"DataInPort");
 		if (dialog.doModal() == JOptionPane.OK_OPTION) {
 			DataPort dataPort = dialog.createDataPort();
@@ -320,7 +371,7 @@ public class PAIOComponentCreationDialog extends JDialog {
 		int index = dataInPortComboBox.getSelectedIndex();
 		for(DataPort dataPort : dataPortList) {
 			if(dataPort.get(DataPort.RTS_NAME).equals(name)) {
-				PAIODataPortCreationDialog dialog = new PAIODataPortCreationDialog("DataInPort", dataPort);
+				PyIODataPortCreationDialog dialog = new PyIODataPortCreationDialog("DataInPort", dataPort);
 				if(dialog.doModal() == JOptionPane.OK_OPTION) {
 					dataPortList.remove(dataPort);
 					dataInPortComboBox.removeItemAt(index);
@@ -335,7 +386,7 @@ public class PAIOComponentCreationDialog extends JDialog {
 	}
 
 	private void onAddDataOutPort() {
-		PAIODataPortCreationDialog dialog = new PAIODataPortCreationDialog(
+		PyIODataPortCreationDialog dialog = new PyIODataPortCreationDialog(
 				"DataOutPort");
 		if (dialog.doModal() == JOptionPane.OK_OPTION) {
 			DataPort dataPort = dialog.createDataPort();
@@ -363,7 +414,7 @@ public class PAIOComponentCreationDialog extends JDialog {
 		int index = dataOutPortComboBox.getSelectedIndex();
 		for(DataPort dataPort : dataPortList) {
 			if(dataPort.get(DataPort.RTS_NAME).equals(name)) {
-				PAIODataPortCreationDialog dialog = new PAIODataPortCreationDialog("DataOutPort", dataPort);
+				PyIODataPortCreationDialog dialog = new PyIODataPortCreationDialog("DataOutPort", dataPort);
 				if(dialog.doModal() == JOptionPane.OK_OPTION) {
 					dataPortList.remove(dataPort);
 					dataOutPortComboBox.removeItemAt(index);

@@ -43,7 +43,7 @@ public class PortShape  {
 	public final static int SIDE_RIGHT = 0;
 	public final static int SIDE_LEFT = 1;
 	public int side;
-	private ComponentShape componentShape;
+	private RTComponentShape componentShape;
 	
 	public int getSide() {
 		return side;
@@ -129,7 +129,7 @@ public class PortShape  {
 	 * 
 	 * @param dataPort
 	 */
-	public PortShape(DataPort dataPort, ComponentShape component) {
+	public PortShape(DataPort dataPort, RTComponentShape component) {
 		this.setComponentShape(component);
 		this.dataPort = dataPort;
 		Rectangle rect = component.getBounds();
@@ -266,14 +266,14 @@ public class PortShape  {
 	/**
 	 * @return componentShape
 	 */
-	public ComponentShape getComponentShape() {
+	public RTComponentShape getComponentShape() {
 		return componentShape;
 	}
 
 	/**
 	 * @param componentShape set componentShape
 	 */
-	public void setComponentShape(ComponentShape componentShape) {
+	public void setComponentShape(RTComponentShape componentShape) {
 		this.componentShape = componentShape;
 	}
 

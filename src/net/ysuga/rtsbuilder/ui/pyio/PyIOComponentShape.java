@@ -11,21 +11,21 @@ package net.ysuga.rtsbuilder.ui.pyio;
 import java.awt.event.MouseEvent;
 
 import net.ysuga.rtsbuilder.ui.RTSystemBuilderPanel;
-import net.ysuga.rtsbuilder.ui.shape.ComponentShape;
-import net.ysuga.rtsystem.profile.Component;
+import net.ysuga.rtsbuilder.ui.shape.RTComponentShape;
+import net.ysuga.rtsystem.profile.RTComponent;
 
 /**
  *
  * @author ysuga
  *
  */
-public class PAIOComponentShape extends ComponentShape {
+public class PyIOComponentShape extends RTComponentShape {
 
 	/**
 	 * Constructor
 	 * @param component
 	 */
-	public PAIOComponentShape(Component component) {
+	public PyIOComponentShape(RTComponent component) {
 		super(component);
 		
 	}
@@ -38,7 +38,7 @@ public class PAIOComponentShape extends ComponentShape {
 	@Override
 	public void onClicked(RTSystemBuilderPanel panel, MouseEvent arg0) {
 		if (arg0.getButton() == MouseEvent.BUTTON3) { // RightClick
-			PAIOComponentPopupMenu popup = new PAIOComponentPopupMenu(panel, this);
+			PyIOComponentPopupMenu popup = new PyIOComponentPopupMenu(panel, this);
 			popup.show(arg0.getPoint());
 		}
 

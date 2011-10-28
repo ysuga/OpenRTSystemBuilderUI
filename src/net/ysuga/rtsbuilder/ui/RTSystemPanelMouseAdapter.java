@@ -10,11 +10,11 @@ import java.util.logging.Logger;
 
 import javax.swing.ToolTipManager;
 
-import net.ysuga.rtsbuilder.ui.shape.ComponentShape;
+import net.ysuga.rtsbuilder.ui.shape.RTComponentShape;
 import net.ysuga.rtsbuilder.ui.shape.ConnectorShape;
 import net.ysuga.rtsbuilder.ui.shape.PortShape;
 import net.ysuga.rtsbuilder.ui.shape.RTSObjectShape;
-import net.ysuga.rtsystem.profile.Component;
+import net.ysuga.rtsystem.profile.RTComponent;
 import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.PortConnector;
 
@@ -214,7 +214,7 @@ public class RTSystemPanelMouseAdapter implements MouseListener,
 			if(componentShape != null) {
 				panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 				ToolTipManager.sharedInstance().setEnabled(true);
-				String str = componentShape.getRTSObject().get(Component.PATH_URI);
+				String str = componentShape.getRTSObject().get(RTComponent.PATH_URI);
 				panel.setToolTipText(str);
 				return;
 			}

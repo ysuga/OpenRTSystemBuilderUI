@@ -11,12 +11,13 @@ package net.ysuga.rtsbuilder.ui.shape;
 import java.util.List;
 import java.util.Set;
 
-import net.ysuga.rtsbuilder.ui.pyio.PAIOComponentShape;
-import net.ysuga.rtsystem.profile.Component;
+import net.ysuga.rtsbuilder.ui.pyio.PyIOComponentShape;
+import net.ysuga.rtsystem.profile.RTComponent;
 import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.PortConnector;
 import net.ysuga.rtsystem.profile.Properties;
+import net.ysuga.rtsystem.profile.PyIOComponent;
 import net.ysuga.rtsystem.profile.RTSystemProfile;
 import net.ysuga.rtsystem.profile.ServicePortConnector;
 
@@ -53,11 +54,11 @@ public class RTSystemShapeBuilder {
 		RTSystemShape shape = createRTSystemShape();
 		shape.setRTSystem(rtSystemProfile);
 
-		for (Component component : (Set<Component>) rtSystemProfile.componentSet) {
-			if (component.get("PAIO") != null) {
-				shape.componentShapeList.add(new PAIOComponentShape(component));
+		for (RTComponent component : (Set<RTComponent>) rtSystemProfile.componentSet) {
+			if (component.get(PyIOComponent.PYIO) != null) {
+				shape.componentShapeList.add(new PyIOComponentShape(component));
 			} else {
-				shape.componentShapeList.add(new ComponentShape(component));
+				shape.componentShapeList.add(new RTComponentShape(component));
 			}
 		}
 
@@ -70,9 +71,9 @@ public class RTSystemShapeBuilder {
 			PortShape sourcePort = null;
 			PortShape targetPort = null;
 			for (RTSObjectShape cShape : (List<RTSObjectShape>) shape.componentShapeList) {
-				if (cShape instanceof ComponentShape) {
-					ComponentShape compShape = ((ComponentShape) cShape);
-					if (compShape.getRTSObject().get(Component.PATH_URI)
+				if (cShape instanceof RTComponentShape) {
+					RTComponentShape compShape = ((RTComponentShape) cShape);
+					if (compShape.getRTSObject().get(RTComponent.PATH_URI)
 							.equals(sourceComponentPathUri)) {
 						for (PortShape portShape : (Set<PortShape>) compShape.portShapeSet) {
 							if (portShape
@@ -83,7 +84,7 @@ public class RTSystemShapeBuilder {
 								sourcePort = portShape;
 							}
 						}
-					} else if (compShape.getRTSObject().get(Component.PATH_URI)
+					} else if (compShape.getRTSObject().get(RTComponent.PATH_URI)
 							.equals(targetComponentPathUri)) {
 						for (PortShape portShape : (Set<PortShape>) compShape.portShapeSet) {
 							if (portShape
@@ -99,8 +100,10 @@ public class RTSystemShapeBuilder {
 				}
 			}
 
+			if(sourcePort != null && targetPort != null) {
 			shape.connectorShapeList.add(new ConnectorShape(connector,
 					sourcePort, targetPort));
+			}
 		}
 
 		for (ServicePortConnector connector : (Set<ServicePortConnector>) rtSystemProfile.servicePortConnectorSet) {
@@ -112,9 +115,9 @@ public class RTSystemShapeBuilder {
 			PortShape sourcePort = null;
 			PortShape targetPort = null;
 			for (RTSObjectShape cShape : (List<RTSObjectShape>) shape.componentShapeList) {
-				if (cShape instanceof ComponentShape) {
-					ComponentShape compShape = (ComponentShape) cShape;
-					if (compShape.getRTSObject().get(Component.PATH_URI)
+				if (cShape instanceof RTComponentShape) {
+					RTComponentShape compShape = (RTComponentShape) cShape;
+					if (compShape.getRTSObject().get(RTComponent.PATH_URI)
 							.equals(sourceComponentPathUri)) {
 						for (PortShape portShape : (Set<PortShape>) compShape.portShapeSet) {
 							if (portShape
@@ -125,7 +128,7 @@ public class RTSystemShapeBuilder {
 								sourcePort = portShape;
 							}
 						}
-					} else if (compShape.getRTSObject().get(Component.PATH_URI)
+					} else if (compShape.getRTSObject().get(RTComponent.PATH_URI)
 							.equals(targetComponentPathUri)) {
 						for (PortShape portShape : (Set<PortShape>) compShape.portShapeSet) {
 							if (portShape
@@ -140,8 +143,10 @@ public class RTSystemShapeBuilder {
 				}
 			}
 
-			shape.connectorShapeList.add(new ConnectorShape(connector,
+			if(sourcePort != null && targetPort != null) {
+				shape.connectorShapeList.add(new ConnectorShape(connector,
 					sourcePort, targetPort));
+			}
 		}
 
 		return shape;

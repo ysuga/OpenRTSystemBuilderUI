@@ -6,7 +6,7 @@
  * @copyright 2011, ysuga.net allrights reserved.
  *
  */
-package net.ysuga.rtsbuilder.ui;
+package net.ysuga.rtsbuilder.ui.pyio.editor;
 
 import java.awt.Component;
 import java.awt.Cursor;
@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import net.ysuga.corbanaming.ui.RTSTreeNode;
@@ -30,17 +31,17 @@ import net.ysuga.corbanaming.ui.RTSTreeNode;
  * @author ysuga
  * 
  */
-public class MainFrameMouseAdapter implements MouseMotionListener, MouseListener {
+public class PyIOEditorMouseAdapter implements MouseMotionListener, MouseListener {
 
-	private MainFrame mainFrame;
-	private RTSTreeNode selectedNode;
+	private PyIOEditor pyIOEditor;
+	private DefaultMutableTreeNode selectedNode;
 	private Cursor cursor;
 
 	/**
 	 * Constructor
 	 * @param mainFrame2
 	 */
-	public MainFrameMouseAdapter(MainFrame mainFrame) {
+	public PyIOEditorMouseAdapter(PyIOEditor pyIOEditor) {
 		File file = new File("paper_cursor.gif");
 		try {
 			img = ImageIO.read(file);
@@ -50,10 +51,10 @@ public class MainFrameMouseAdapter implements MouseMotionListener, MouseListener
 		}
 		Point hotSpot = new Point(0, 0);
 		String name  = "test-cursor";
-		Toolkit kit = mainFrame.getToolkit();
+		Toolkit kit = pyIOEditor.getToolkit();
 		cursor = kit.createCustomCursor(img, hotSpot, name);
 		
-		this.mainFrame = mainFrame;
+		this.pyIOEditor = pyIOEditor;
 	}
 	Image img;
 	
@@ -73,7 +74,7 @@ public class MainFrameMouseAdapter implements MouseMotionListener, MouseListener
 	 */
 	public void mouseDragged(MouseEvent e) {
 		if(selectedNode != null) {
-			mainFrame.setCursor(cursor);
+			pyIOEditor.setCursor(cursor);
 		}
 	}
 
@@ -105,8 +106,8 @@ public class MainFrameMouseAdapter implements MouseMotionListener, MouseListener
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getSource() == mainFrame.getRtSystemTreeView().getTree()) {
-			JTree tree = mainFrame.getRtSystemTreeView().getTree();
+		if (e.getSource() == pyIOEditor.getPyIOConfigurationTree()) {
+			JTree tree = pyIOEditor.getPyIOConfigurationTree();
 			///TreeModel model = tree.getModel();
 
 			TreePath path = tree.getPathForLocation(e.getPoint().x,
@@ -114,15 +115,14 @@ public class MainFrameMouseAdapter implements MouseMotionListener, MouseListener
 			tree.setSelectionPath(path);
 			if (path != null) {
 				Object obj = path.getLastPathComponent();
-				//System.out.println(obj);
-				if (obj instanceof RTSTreeNode) {
-					selectedNode = (RTSTreeNode) obj;
-					((RTSTreeNode) obj).onClicked(e);
+				if (obj instanceof DefaultMutableTreeNode) {
+					selectedNode = (DefaultMutableTreeNode) obj;
+					//((RTSTreeNode) obj).onClicked(e);
 				}
 			}
-		} else if(e.getSource() == mainFrame.getRtSystemBuilderPanel()){
-		//	System.out.println("Builder");
-		}
+		}// else if(e.getSource() == pyIOEditor.getRtSystemBuilderPanel()){
+			//System.out.println("Builder");
+		//}
 	}
 
 	/**
@@ -131,24 +131,26 @@ public class MainFrameMouseAdapter implements MouseMotionListener, MouseListener
 	 * @param e
 	 */
 	public void mouseReleased(MouseEvent e) {
-		if (e.getSource() == mainFrame.getRtSystemTreeView().getTree()) {
+		if (e.getSource() == pyIOEditor.getPyIOConfigurationTree()) {
 			if (selectedNode != null) {
 				
-				if(contains(mainFrame.getRtSystemBuilderPanel(), e)) {
+				if(contains(pyIOEditor.getCurrentEditor(), e)) {
 					try {
 						Point mousePoint = e.getLocationOnScreen();
-						Point origin = mainFrame.getRtSystemBuilderPanel().getLocationOnScreen();
-						mainFrame.getRtSystemBuilderPanel().addRTComponentOnEditor(selectedNode.getFullPath(), new Point(mousePoint.x - origin.x, mousePoint.y - origin.y));
+						Point origin = pyIOEditor.getCurrentEditor().getLocationOnScreen();
+						if(selectedNode instanceof PyIOConfigurationNode) {
+							pyIOEditor.addConfigurationMedthodOnEditor((PyIOConfigurationNode)selectedNode, new Point(mousePoint.x - origin.x, mousePoint.y - origin.y));
+						}
 					} catch (Exception e1) {
 						// TODO 自動生成された catch ブロック
 						e1.printStackTrace();
 					}
-					mainFrame.repaint();
+					pyIOEditor.repaint();
 				}
 			}
 		}
 		selectedNode = null;
-		mainFrame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		pyIOEditor.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	/**

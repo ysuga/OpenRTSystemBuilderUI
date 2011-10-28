@@ -19,7 +19,7 @@ import javax.swing.JSeparator;
 
 import net.ysuga.rtsbuilder.RTSystemBuilder;
 import net.ysuga.rtsbuilder.ui.RTSystemBuilderPanel;
-import net.ysuga.rtsystem.profile.Component;
+import net.ysuga.rtsystem.profile.RTComponent;
 
 /**
  * <div lang="ja">
@@ -35,7 +35,7 @@ public class ComponentPopupMenu {
 
 	protected JPopupMenu popupMenu;
 	private RTSystemBuilderPanel panel;
-	private Component component;
+	private RTComponent component;
 
 	/**
 	 * <div lang="ja"> �R���X�g���N�^
@@ -46,21 +46,22 @@ public class ComponentPopupMenu {
 	 *            </div>
 	 */
 	public ComponentPopupMenu(RTSystemBuilderPanel panel,
-			ComponentShape component) {
+			RTComponentShape component) {
 		this.panel = panel;
-		this.component = (Component) component.getRTSObject();
+		this.component = (RTComponent) component.getRTSObject();
 		popupMenu = new JPopupMenu();
 
+		/*
 		JMenuItem refreshMenuItem = new JMenuItem(new AbstractAction(
 				"Synchronize") {
 			public void actionPerformed(ActionEvent arg0) {
-				onSynchronize();
+				onDownwardSynchronize();
 			}
 		});
 		popupMenu.add(refreshMenuItem);
 
 		popupMenu.add(new JSeparator());
-
+		*/
 		JMenuItem activateMenuItem = new JMenuItem(new AbstractAction(
 				"Activate") {
 			public void actionPerformed(ActionEvent arg0) {
@@ -83,6 +84,13 @@ public class ComponentPopupMenu {
 			}
 		});
 		popupMenu.add(resetMenuItem);
+
+		JMenuItem exitMenuItem = new JMenuItem(new AbstractAction("Exit") {
+			public void actionPerformed(ActionEvent arg0) {
+				onExit();
+			}
+		});
+		popupMenu.add(exitMenuItem);
 
 		popupMenu.add(new JSeparator());
 
@@ -119,7 +127,7 @@ public class ComponentPopupMenu {
 
 	private void onActivate() {
 		try {
-			RTSystemBuilder.activateComponent((Component) component);
+			RTSystemBuilder.activateComponent((RTComponent) component);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(panel, "Failed to find RTComponent");
 			e.printStackTrace();
@@ -128,7 +136,7 @@ public class ComponentPopupMenu {
 
 	private void onDeactivate() {
 		try {
-			RTSystemBuilder.deactivateComponent((Component) component);
+			RTSystemBuilder.deactivateComponent((RTComponent) component);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(panel, "Failed to find RTComponent");
 			e.printStackTrace();
@@ -137,24 +145,33 @@ public class ComponentPopupMenu {
 
 	private void onReset() {
 		try {
-			RTSystemBuilder.resetComponent((Component) component);
+			RTSystemBuilder.resetComponent((RTComponent) component);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(panel, "Failed to find RTComponent");
 			e.printStackTrace();
 		}
 	}
 
-	private void onSynchronize() {
+	private void onExit() {
 		try {
-			RTSystemBuilder.findComponent((Component) component);
+			RTSystemBuilder.exitComponent((RTComponent) component);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(panel, "Failed to find RTComponent");
 			e.printStackTrace();
 		}
 	}
-	
+
+	private void onDownwardSynchronize() {
+		try {
+			RTSystemBuilder.downwardSynchronization((RTComponent) component);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(panel, "Failed to find RTComponent");
+			e.printStackTrace();
+		}
+	}
+
 	private void onRemove() {
-		panel.getRTSystemProfile().componentSet.remove(this.component);
+		panel.getRTSystemProfile().removeComponent(this.component);
 		panel.refresh();
 	}
 }

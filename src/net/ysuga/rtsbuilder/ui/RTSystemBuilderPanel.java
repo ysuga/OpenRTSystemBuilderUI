@@ -16,6 +16,7 @@ import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -23,14 +24,14 @@ import javax.swing.JPanel;
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.ysuga.rtsbuilder.RTSystemBuilder;
-import net.ysuga.rtsbuilder.ui.pyio.PAIOComponentCreationDialog;
-import net.ysuga.rtsbuilder.ui.shape.ComponentPopupMenu;
+import net.ysuga.rtsbuilder.ui.pyio.PyIOComponentCreationDialog;
 import net.ysuga.rtsbuilder.ui.shape.ConnectorShape;
 import net.ysuga.rtsbuilder.ui.shape.RTSystemShape;
 import net.ysuga.rtsbuilder.ui.shape.RTSystemShapeBuilder;
-import net.ysuga.rtsystem.profile.Component;
+import net.ysuga.rtsystem.profile.RTComponent;
 import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.PortConnector;
+import net.ysuga.rtsystem.profile.PythonRTCLauncher;
 import net.ysuga.rtsystem.profile.RTSObject;
 import net.ysuga.rtsystem.profile.RTSystemProfile;
 
@@ -51,6 +52,7 @@ public class RTSystemBuilderPanel extends JPanel {
 	public final static int EDIT_NORMAL = 0;
 	public final static int EDIT_TRANSITION = 1;
 	public static final int EDIT_CONNECTION = 2;
+	private ArrayList<PythonRTCLauncher> launcherList;
 
 	public int editMode = EDIT_NORMAL;
 
@@ -214,18 +216,7 @@ public class RTSystemBuilderPanel extends JPanel {
 		this.connectorPopupMenu = new ConnectorPopupMenu(this);
 		this.rtSystemPanelPopupMenu = new RTSystemPanelPopupMenu(this);
 		
-		/**
-		 * GuardSettingDialogFactoryManager .add(new
-		 * AndGuardSettingDialogFactory()); GuardSettingDialogFactoryManager
-		 * .add(new ExorGuardSettingDialogFactory());
-		 * GuardSettingDialogFactoryManager.add(new
-		 * OrGuardSettingDialogFactory()); GuardSettingDialogFactoryManager
-		 * .add(new NotGuardSettingDialogFactory());
-		 * 
-		 * GuardSettingDialogFactoryManager .add(new
-		 * DelayGuardSettingDialogFactory()); GuardSettingDialogFactoryManager
-		 * .add(new NullGuardSettingDialogFactory());
-		 */
+		this.launcherList = new ArrayList<PythonRTCLauncher>();
 	}
 
 	/**
@@ -531,18 +522,23 @@ public class RTSystemBuilderPanel extends JPanel {
 	 */
 	public void refresh() {
 		try {
-			RTSystemBuilder.searchRTCs(this.rtSystemProfile);
-			RTSystemBuilder.searchConnections(this.rtSystemProfile);
-			for(ConnectorShape shape : rtSystemShape.connectorShapeList) {
-				shape.autoPivot();
-			}
+			//RTSystemBuilder.searchRTCs(this.rtSystemProfile);
+			//RTSystemBuilder.searchConnections(this.rtSystemProfile);
+			//for(ConnectorShape shape : rtSystemShape.connectorShapeList) {
+			//	shape.autoPivot();
+			//}
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, "Connecting was failed.");
 		}
 	}
 	
-	
+	public void downwardSynchronization() throws Exception {
+		RTSystemBuilder.downwardSynchronization(rtSystemProfile);
+	}
 
+	public void upwardSynchronization() throws Exception {
+		RTSystemBuilder.upwardSynchronization(rtSystemProfile);
+	}
 	/**
 	 * activate <div lang="ja">
 	 * 
@@ -636,10 +632,10 @@ public class RTSystemBuilderPanel extends JPanel {
 	 * @throws Exception 
 	 */
 	public void addRTComponentOnEditor(String fullPath, Point point) throws Exception {
-		Component component = RTSystemBuilder.createComponent(fullPath);
+		RTComponent component = RTSystemBuilder.createComponent(fullPath);
 		component.setLocation(point);
 		this.rtSystemProfile.addComponent(component);
-		RTSystemBuilder.findComponent(component);
+		RTSystemBuilder.downwardSynchronization(component);
 	}
 
 	/**
@@ -648,10 +644,10 @@ public class RTSystemBuilderPanel extends JPanel {
 	 *
 	 */
 	public void addComponent(Point point) {
-		PAIOComponentCreationDialog dialog = new PAIOComponentCreationDialog();
+		PyIOComponentCreationDialog dialog = new PyIOComponentCreationDialog();
 		if(dialog.doModal() == JOptionPane.OK_OPTION) {
 			try {
-				Component component = dialog.createComponent();
+				RTComponent component = dialog.createComponent();
 				component.setLocation(point);
 				this.getRTSystemProfile().addComponent(component);
 				refresh();
@@ -659,5 +655,14 @@ public class RTSystemBuilderPanel extends JPanel {
 				e.printStackTrace();
 			} 
 		}
+	}
+
+	/**
+	 * addPyIOLauncher
+	 *
+	 * @param launcher
+	 */
+	public void addPyIOLauncher(PythonRTCLauncher launcher) {
+		launcherList.add(launcher);
 	}
 }

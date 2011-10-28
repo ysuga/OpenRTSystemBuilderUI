@@ -12,7 +12,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import net.ysuga.rtsystem.profile.PAIOComponent;
+import net.ysuga.rtsystem.profile.PyIOComponent;
 
 /**
  *
@@ -27,7 +27,7 @@ public class PyIOMethodTree extends JTree {
 	 * Constructor
 	 * @param component
 	 */
-	public PyIOMethodTree(PAIOComponent component) {
+	public PyIOMethodTree(PyIOComponent component) {
 		super();
 		rootNode = new DefaultMutableTreeNode("DataFlowComponent");
 		

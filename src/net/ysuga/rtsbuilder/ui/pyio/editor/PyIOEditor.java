@@ -8,15 +8,18 @@
  */
 package net.ysuga.rtsbuilder.ui.pyio.editor;
 
+import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
-import net.ysuga.rtsystem.profile.PAIOComponent;
+import net.ysuga.rtsystem.profile.DataPort;
+import net.ysuga.rtsystem.profile.PyIOComponent;
 
 /**
  *
@@ -34,15 +37,27 @@ public class PyIOEditor extends JFrame {
 	
 	private PyIOConfigurationTree pyioConfigurationTree;
 	
+	public PyIOConfigurationTree getPyIOConfigurationTree() {
+		return pyioConfigurationTree;
+	}
+	
+	public JComponent getCurrentEditor() {
+		return tabbedPane;
+	}
+	
 	private JTabbedPane tabbedPane;
 	private PyIOMethodTree pyioMethodTree;
 	
-	private PAIOComponent component;
+	public PyIOMethodTree getPyIOMethodTree() {
+		return pyioMethodTree;
+	}
+	
+	private PyIOComponent component;
 	
 	
 	
 	
-	public PyIOEditor(PAIOComponent component) {
+	public PyIOEditor(PyIOComponent component) {
 		super();
 		this.component = component;
 		
@@ -70,6 +85,11 @@ public class PyIOEditor extends JFrame {
 		vSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pyioMethodTree, pyioConfigurationTree);
 		hSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabbedPane, vSplitPane);
 		setContentPane(hSplitPane);
+		
+		mouseAdapter = new PyIOEditorMouseAdapter(this);
+		this.addMouseListener(mouseAdapter);
+		this.addMouseMotionListener(mouseAdapter);
+
 		
 		super.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		super.addWindowListener(new WindowAdapter() {
@@ -103,5 +123,26 @@ public class PyIOEditor extends JFrame {
 	
 	public void updatePyIOCode() {
 		component.setOnExecuteCode(onExecuteEditorPane.getText());
+	}
+
+	PyIOEditorMouseAdapter mouseAdapter;
+	/**
+	 * addConfigurationMedthodOnEditor
+	 *
+	 * @param selectedNode
+	 * @param point
+	 */
+	public void addConfigurationMedthodOnEditor(
+			PyIOConfigurationNode selectedNode, Point point) {
+		DataPort dataPort = selectedNode.getDataPort();
+		if(dataPort.getDirection() == DataPort.DIRECTION_IN) {
+			// DataInPort
+			String portName = dataPort.getPlainName();
+			String methodCode = "\tif self._"+portName+"In.isNew():\n\t\tdata = self._"+portName+"In.read()\n\t\tprint data.data";
+			
+			PyIOEditorPane selectedPane = (PyIOEditorPane)tabbedPane.getSelectedComponent();
+			
+			selectedPane.addMethodCode(methodCode, point);
+		}
 	}
 }

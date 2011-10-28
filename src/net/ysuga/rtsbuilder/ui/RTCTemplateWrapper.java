@@ -26,10 +26,11 @@ import java.util.Map;
  */
 public class RTCTemplateWrapper {
 
-	public static void generate(File workingDir, String language,
+	public static File generate(File workingDir, String language,
 			String moduleName, String moduleDesc, String moduleVendor,
 			String moduleVersion, String moduleCompType, String moduleActType,
 			String moduleCategory, String moduleMaxInstance,
+			String namingFormats, String nameServers, String periodicRate,
 			Map<String, String> inportMap, Map<String, String> outportMap)
 			throws Exception {
 		if (!workingDir.exists()) {
@@ -38,7 +39,7 @@ public class RTCTemplateWrapper {
 
 		List<String> arg = new ArrayList<String>();
 		arg.add("C:/Python26/python");
-		arg.add("\"C:/Program Files (x86)/OpenRTM-aist/1.0/utils/rtc-template/rtc-template.py\"");
+		arg.add("\"C:/Program Files (x86)/OpenRTM-aist/1.1/utils/rtc-template/rtc-template.py\"");
 		arg.add("-b" + language);
 		arg.add("--module-name=" + moduleName);
 		arg.add("--module-desc=\"" + moduleDesc + "\"");
@@ -48,7 +49,6 @@ public class RTCTemplateWrapper {
 		arg.add("--module-act-type=" + moduleActType);
 		arg.add("--module-category=" + moduleCategory);
 		arg.add("--module-max-inst=" + moduleMaxInstance);
-		//arg.add("--module-lang=" + language);
 		if(inportMap != null) {
 			for(String name : inportMap.keySet()) {
 				String type = inportMap.get(name);
@@ -62,12 +62,23 @@ public class RTCTemplateWrapper {
 			}
 		}
 		
+		// Executing rtc-template.py
 		ProcessBuilder pb = new ProcessBuilder(arg);
 		pb.directory(workingDir);
 		Process p = pb.start();
 		p.waitFor();
 		p.destroy();
 
+		// Generating rtc.conf
+		//String rtc_conf_str = "naming.formats:%n.rtc\ncorba.nameservers:localhost:2809";
+		File rtcConfFile = new File(workingDir.getAbsolutePath() + "/" + "rtc.conf");
+		BufferedWriter cbw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rtcConfFile)));
+		cbw.write("naming.formats:"+namingFormats+"\n");
+		cbw.write("corba.nameservers:"+nameServers+"\n");
+		cbw.write("exec_cxt.periodic.rate:"+periodicRate+"\n");
+		cbw.close();
+		
+		// Changing wrong import method in the beginning seciton of generated *.py file.
 		File backupFile = new File(workingDir.getAbsolutePath() + "/"
 				+ moduleName + ".bak" + ".py");
 		File componentFile = new File(workingDir.getAbsolutePath() + "/"
@@ -92,10 +103,12 @@ public class RTCTemplateWrapper {
 		bw.flush();
 		br.close();
 		bw.close();
+		
 		if (!backupFile.delete()) {
-
 			throw new Exception("Failed to delete.");
 		}
+		return newComponentFile;
+		
 	}
 
 }

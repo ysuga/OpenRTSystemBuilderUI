@@ -32,14 +32,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import net.ysuga.corbanaming.ui.GridLayoutPanel;
-import net.ysuga.rtsystem.profile.Component;
+import net.ysuga.rtsystem.profile.RTComponent;
 
 /**
  * 
  * @author ysuga
  * 
  */
-public class PAIOComponentBuildDialog extends JDialog {
+public class PyIOComponentBuildDialog extends JDialog {
 
 	private JTextField moduleNameField;
 	private JTextField moduleDescField;
@@ -61,7 +61,7 @@ public class PAIOComponentBuildDialog extends JDialog {
 	 *            </div>
 	 * @throws Exception
 	 */
-	public PAIOComponentBuildDialog() {
+	public PyIOComponentBuildDialog() {
 		super();
 
 		moduleNameField = new JTextField("ModuleName");
@@ -96,11 +96,7 @@ public class PAIOComponentBuildDialog extends JDialog {
 	 * @return void
 	 */
 	private void initPanel() {
-		okButton = new JButton(new AbstractAction("OK") {
-			public void actionPerformed(ActionEvent arg0) {
-				onOk(arg0);
-			}
-		});
+
 
 		contentPane = (JPanel) getContentPane();
 		GridLayoutPanel panel = new GridLayoutPanel();
@@ -139,7 +135,20 @@ public class PAIOComponentBuildDialog extends JDialog {
 		panel.addComponent(1, line, 10, 0, 3, 1, moduleMaxInstanceField);
 		line++;
 		
-		contentPane.add(okButton, BorderLayout.SOUTH);
+		GridLayoutPanel buttonPanel = new GridLayoutPanel();
+		buttonPanel.addComponent(0, 0, 10, 0, 1, 1, new JLabel(""));
+		buttonPanel.addComponent(0, 1, 0, 0, 1, 1,new JButton(new AbstractAction("Cancel") {
+			public void actionPerformed(ActionEvent e) {
+				onCancel();
+			}
+		}));
+		buttonPanel.addComponent(0, 2, 0, 0, 1, 1,new JButton(new AbstractAction("OK") {
+			public void actionPerformed(ActionEvent e) {
+				onOk(e);
+			}
+		}));
+		
+		contentPane.add(buttonPanel, BorderLayout.SOUTH);
 		okButton.setRequestFocusEnabled(true);
 
 	}
@@ -157,7 +166,7 @@ public class PAIOComponentBuildDialog extends JDialog {
 	 * 
 	 * @return
 	 */
-	public Component createComponent() {
+	public RTComponent createComponent() {
 		
 		File rtcDir = new File("rtc/" + moduleNameField.getText());
 		int i = 2;

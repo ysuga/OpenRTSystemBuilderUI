@@ -19,7 +19,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import net.ysuga.rtsbuilder.ui.ConnectionDialog;
-import net.ysuga.rtsystem.profile.Component;
+import net.ysuga.rtsystem.profile.RTComponent;
 import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.PortConnector;
@@ -39,11 +39,11 @@ import net.ysuga.rtsystem.profile.ServicePortConnector;
  * 
  */
 public class RTSystemShape {
-	final public ComponentShape getSelectedComponentShape() {
+	final public RTComponentShape getSelectedComponentShape() {
 		for (RTSObjectShape componentShape : componentShapeList) {
-			if (componentShape instanceof ComponentShape) {
-				if (((ComponentShape) componentShape).isSelected())
-					return (ComponentShape) componentShape;
+			if (componentShape instanceof RTComponentShape) {
+				if (((RTComponentShape) componentShape).isSelected())
+					return (RTComponentShape) componentShape;
 			}
 		}
 		return null;
@@ -60,11 +60,11 @@ public class RTSystemShape {
 
 	public List<RTSObjectShape> componentShapeList;
 
-	final public ComponentShape getComponentShape(RTSProperties state) {
+	final public RTComponentShape getComponentShape(RTSProperties state) {
 		for (RTSObjectShape shape : componentShapeList) {
-			if (shape instanceof ComponentShape) {
-				if (state.equals(((ComponentShape) shape).getRTSObject())) {
-					return (ComponentShape) shape;
+			if (shape instanceof RTComponentShape) {
+				if (state.equals(((RTComponentShape) shape).getRTSObject())) {
+					return (RTComponentShape) shape;
 				}
 			}
 		}
@@ -144,8 +144,8 @@ public class RTSystemShape {
 	 */
 	public void setSelectedComponent(RTSProperties selectedComponent) {
 		for (RTSObjectShape shape : componentShapeList) {
-			if (shape instanceof ComponentShape) {
-				if (((ComponentShape) shape).getRTSObject().equals(
+			if (shape instanceof RTComponentShape) {
+				if (((RTComponentShape) shape).getRTSObject().equals(
 						selectedComponent)) {
 					shape.setSelected(true);
 				}
@@ -155,8 +155,8 @@ public class RTSystemShape {
 
 	public void setSelectedDataPort(RTSProperties selectedDataPort) {
 		for (RTSObjectShape shape : componentShapeList) {
-			if (shape instanceof ComponentShape) {
-				for (PortShape pshape : (Set<PortShape>) ((ComponentShape) shape).portShapeSet) {
+			if (shape instanceof RTComponentShape) {
+				for (PortShape pshape : (Set<PortShape>) ((RTComponentShape) shape).portShapeSet) {
 					if (pshape.getDataPort().equals(selectedDataPort)) {
 						pshape.setSelected(true);
 					}
@@ -232,8 +232,8 @@ public class RTSystemShape {
 	 */
 	public PortShape getSelectedDataPortShape() {
 		for (RTSObjectShape compShape : componentShapeList) {
-			if (compShape instanceof ComponentShape) {
-				for (PortShape portShape : (Set<PortShape>) ((ComponentShape) compShape).portShapeSet) {
+			if (compShape instanceof RTComponentShape) {
+				for (PortShape portShape : (Set<PortShape>) ((RTComponentShape) compShape).portShapeSet) {
 					if (portShape.isSelected()) {
 						return portShape;
 					}
@@ -288,8 +288,8 @@ public class RTSystemShape {
 	 */
 	public PortShape getContainingPortShape(Point point) {
 		for (RTSObjectShape componentShape : getComponentShapeList()) {
-			if (componentShape instanceof ComponentShape) {
-				for (PortShape portShape : (Set<PortShape>) ((ComponentShape) componentShape).portShapeSet) {
+			if (componentShape instanceof RTComponentShape) {
+				for (PortShape portShape : (Set<PortShape>) ((RTComponentShape) componentShape).portShapeSet) {
 					if (portShape.contains(point)) {
 						return portShape;
 					}
@@ -323,9 +323,9 @@ public class RTSystemShape {
 	 */
 	public void connect(RTSObject source, RTSObject target) throws Exception {
 		if ((source instanceof DataPort) && (target instanceof DataPort)) {
-			Component sourceComponent = this.getRtSystemProfile().getOwner(
+			RTComponent sourceComponent = this.getRtSystemProfile().getOwner(
 					(DataPort) source);
-			Component targetComponent = this.getRtSystemProfile().getOwner(
+			RTComponent targetComponent = this.getRtSystemProfile().getOwner(
 					(DataPort) target);
 			ConnectionDialog dialog = new ConnectionDialog(sourceComponent,
 					(DataPort) source, targetComponent, (DataPort) target);

@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.ysuga.rtsbuilder.ui.RTSystemBuilderPanel;
-import net.ysuga.rtsystem.profile.Component;
+import net.ysuga.rtsystem.profile.RTComponent;
 import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.Location;
 import net.ysuga.rtsystem.profile.RTSObject;
@@ -33,10 +33,10 @@ import net.ysuga.rtsystem.profile.RTSProperties;
  * @author ysuga
  * 
  */
-public class ComponentShape implements RTSObjectShape {
+public class RTComponentShape implements RTSObjectShape {
 
 	private NamedBox box;
-	private Component component;
+	private RTComponent component;
 
 	int boxwidth = 80;
 	int boxheight = 40;
@@ -64,11 +64,11 @@ public class ComponentShape implements RTSObjectShape {
 	/**
 	 * <div lang="ja"> �R���X�g���N�^ </div> <div lang="en"> Constructor </div>
 	 */
-	public ComponentShape(Component component) {
+	public RTComponentShape(RTComponent component) {
 		int x = Integer.parseInt(component.location.get(Location.RTS_EXT_X));
 		int y = Integer.parseInt(component.location.get(Location.RTS_EXT_Y));
 		Point p = new Point(x, y);
-		box = new NamedBox(component.get(Component.INSTANCE_NAME), p.x, p.y,
+		box = new NamedBox(component.get(RTComponent.INSTANCE_NAME), p.x, p.y,
 				boxwidth, boxheight);
 		this.component = component;
 
@@ -83,7 +83,7 @@ public class ComponentShape implements RTSObjectShape {
 		int suitableHeight = maxPortInOneSide * 15 + 5;
 		if (boxheight < suitableHeight) {
 			boxheight = suitableHeight;
-			box = new NamedBox(component.get(Component.INSTANCE_NAME), p.x,
+			box = new NamedBox(component.get(RTComponent.INSTANCE_NAME), p.x,
 					p.y, boxwidth, boxheight);
 		}
 

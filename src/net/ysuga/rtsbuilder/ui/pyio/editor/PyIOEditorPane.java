@@ -10,6 +10,7 @@ package net.ysuga.rtsbuilder.ui.pyio.editor;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
 import java.io.IOException;
 
 import javax.swing.JEditorPane;
@@ -40,5 +41,20 @@ public class PyIOEditorPane extends JEditorPane {
 	
 	public PyIOEditorPane(String text) throws IOException {
 		this();
+	}
+
+
+	/**
+	 * addMethodCode
+	 *
+	 * @param methodCode
+	 * @param point
+	 */
+	public void addMethodCode(String methodCode, Point point) {
+		int offset = this.viewToModel(point);
+		StringBuilder strbuf = new StringBuilder( super.getText());
+		strbuf.insert(offset, "Hello\n");
+		setText(strbuf.toString());
+	
 	}
 }

@@ -9,6 +9,8 @@
 package net.ysuga.rtsbuilder.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,7 +25,7 @@ import javax.swing.JTextField;
 
 import net.ysuga.corbanaming.ui.GridLayoutPanel;
 import net.ysuga.rtsbuilder.RTSystemBuilder;
-import net.ysuga.rtsystem.profile.Component;
+import net.ysuga.rtsystem.profile.RTComponent;
 import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.DataPortConnector;
 import net.ysuga.rtsystem.profile.Properties;
@@ -45,8 +47,8 @@ public class ConnectionDialog extends JDialog {
 
 	private DataPort sourceDataPort;
 	private DataPort targetDataPort;
-	private Component sourceComponent;
-	private Component targetComponent;
+	private RTComponent sourceComponent;
+	private RTComponent targetComponent;
 
 	private boolean validConnection;
 
@@ -72,8 +74,8 @@ public class ConnectionDialog extends JDialog {
 	 *            </div>
 	 * @throws Exception
 	 */
-	public ConnectionDialog(Component sourceComponent, DataPort sourceDataPort,
-			Component targetComponent, DataPort targetDataPort)
+	public ConnectionDialog(RTComponent sourceComponent, DataPort sourceDataPort,
+			RTComponent targetComponent, DataPort targetDataPort)
 			throws Exception {
 		super();
 		this.sourceDataPort = sourceDataPort;
@@ -89,15 +91,14 @@ public class ConnectionDialog extends JDialog {
 		validConnection = RTSystemBuilder.isConnectable(sourceComponent,
 				sourceDataPort, targetComponent, targetDataPort);
 		if (validConnection) {
+			// TODO:: ここでPyIOか否かを判定して，PyIOならばデフォルト値の設定はムリーーー
+			
 			dataType = RTSystemBuilder.getDataType(sourceComponent,
 					sourceDataPort);
-			try {
 			interfaceName = RTSystemBuilder.getConnectionServiceInterfaceName(
 					sourceComponent, sourceDataPort, targetComponent,
 					targetDataPort);
-			} catch (NotFound e) {
-				System.out.println("Not Found");
-			}
+
 		}
 	}
 
@@ -132,11 +133,15 @@ public class ConnectionDialog extends JDialog {
 		contentPane = (JPanel) getContentPane();
 		GridLayoutPanel panel = new GridLayoutPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
-
-		panel.addComponent(0, 0, 0, 0, 1, 1, new JLabel("Connection Id"));
-		panel.addComponent(1, 0, 10, 0, 3, 1, connectionIdField);
-		panel.addComponent(0, 1, 0, 0, 1, 1, new JLabel("Connection Name"));
-		panel.addComponent(1, 1, 10, 0, 3, 1, connectionNameField);
+		
+		JLabel mainLabel = new JLabel("Input Connection Parameter Below");
+		Dimension s = mainLabel.getSize();
+		mainLabel.setSize(400, s.height);
+		panel.addComponent(0, 0, 10, 0, 2, 1, mainLabel);
+		panel.addComponent(0, 1, 0, 0, 1, 1, new JLabel("Connection Id"));
+		panel.addComponent(1, 1, 10, 0, 3, 1, connectionIdField);
+		panel.addComponent(0, 2, 0, 0, 1, 1, new JLabel("Connection Name"));
+		panel.addComponent(1, 2, 10, 0, 3, 1, connectionNameField);
 
 		if (dataType != null) {
 			dataTypeField = new JTextField(dataType);
@@ -169,20 +174,20 @@ public class ConnectionDialog extends JDialog {
 			pushIntervalTextField = new JTextField("1000.0");
 			pushIntervalTextField.setEditable(false);
 
-			panel.addComponent(0, 2, 0, 0, 1, 1, new JLabel("Data Type"));
-			panel.addComponent(1, 2, 10, 0, 3, 1, dataTypeField);
-			panel.addComponent(0, 3, 0, 0, 1, 1, new JLabel("Interface Type"));
-			panel.addComponent(1, 3, 10, 0, 3, 1, interfaceTypeComboBox);
-			panel.addComponent(0, 4, 0, 0, 1, 1, new JLabel("Dataflow Type"));
-			panel.addComponent(1, 4, 10, 0, 3, 1, dataflowTypeComboBox);
-			panel.addComponent(0, 5, 0, 0, 1, 1,
+			panel.addComponent(0, 3, 0, 0, 1, 1, new JLabel("Data Type"));
+			panel.addComponent(1, 3, 10, 0, 3, 1, dataTypeField);
+			panel.addComponent(0, 4, 0, 0, 1, 1, new JLabel("Interface Type"));
+			panel.addComponent(1, 4, 10, 0, 3, 1, interfaceTypeComboBox);
+			panel.addComponent(0, 5, 0, 0, 1, 1, new JLabel("Dataflow Type"));
+			panel.addComponent(1, 5, 10, 0, 3, 1, dataflowTypeComboBox);
+			panel.addComponent(0, 6, 0, 0, 1, 1,
 					new JLabel("Subscription Type"));
-			panel.addComponent(1, 5, 10, 0, 3, 1, subscriptionTypeComboBox);
-			panel.addComponent(0, 6, 0, 0, 1, 1, new JLabel("Push Rate"));
-			panel.addComponent(1, 6, 10, 0, 3, 1, pushIntervalTextField);
+			panel.addComponent(1, 6, 10, 0, 3, 1, subscriptionTypeComboBox);
+			panel.addComponent(0, 7, 0, 0, 1, 1, new JLabel("Push Rate"));
+			panel.addComponent(1, 7, 10, 0, 3, 1, pushIntervalTextField);
 		} else {
-			panel.addComponent(0, 2, 0, 0, 1, 1, new JLabel("Interface Type"));
-			panel.addComponent(1, 2, 10, 0, 3, 1, new JLabel(interfaceName));
+			panel.addComponent(0, 3, 0, 0, 1, 1, new JLabel("Interface Type"));
+			panel.addComponent(1, 3, 10, 0, 3, 1, new JLabel(interfaceName));
 		}
 
 		contentPane.add(okButton, BorderLayout.SOUTH);
@@ -196,6 +201,12 @@ public class ConnectionDialog extends JDialog {
 		}
 		initPanel();
 		pack();
+		
+		Point mainLocation = MainFrame.getInstance().getLocation();
+		Dimension mainSize = MainFrame.getInstance().getSize();
+		Dimension thisSize = getSize();
+		super.setLocation(mainLocation.x+mainSize.width/2-thisSize.width/2, mainLocation.y + mainSize.height/2 - thisSize.height/2);
+
 		setModal(true);
 		setVisible(true);
 		return exitOption;
@@ -219,11 +230,11 @@ public class ConnectionDialog extends JDialog {
 		}
 		
 		connector.sourcePort = connector.new Port(this.sourceDataPort.get(DataPort.RTS_NAME),
-				this.sourceComponent.get(Component.INSTANCE_NAME), this.sourceComponent.get(Component.ID));
-		connector.sourcePort.properties = new Properties("COMPONENT_PATH_ID", sourceComponent.get(Component.PATH_URI));
+				this.sourceComponent.get(RTComponent.INSTANCE_NAME), this.sourceComponent.get(RTComponent.ID));
+		connector.sourcePort.properties = new Properties("COMPONENT_PATH_ID", sourceComponent.get(RTComponent.PATH_URI));
 		connector.targetPort = connector.new Port(this.targetDataPort.get(DataPort.RTS_NAME),
-				this.targetComponent.get(Component.INSTANCE_NAME), this.targetComponent.get(Component.ID));
-		connector.targetPort.properties = new Properties("COMPONENT_PATH_ID", targetComponent.get(Component.PATH_URI));
+				this.targetComponent.get(RTComponent.INSTANCE_NAME), this.targetComponent.get(RTComponent.ID));
+		connector.targetPort.properties = new Properties("COMPONENT_PATH_ID", targetComponent.get(RTComponent.PATH_URI));
 		
 		return connector;
 	}
@@ -237,11 +248,11 @@ public class ConnectionDialog extends JDialog {
 			connector = new ServicePortConnector(connectionIdField.getText(),
 					connectionNameField.getText());
 			connector.sourcePort = connector.new Port(this.sourceDataPort.get(DataPort.RTS_NAME),
-					this.sourceComponent.get(Component.INSTANCE_NAME), this.sourceComponent.get(Component.ID));
-			connector.sourcePort.properties = new Properties("COMPONENT_PATH_ID", sourceComponent.get(Component.PATH_URI));
+					this.sourceComponent.get(RTComponent.INSTANCE_NAME), this.sourceComponent.get(RTComponent.ID));
+			connector.sourcePort.properties = new Properties("COMPONENT_PATH_ID", sourceComponent.get(RTComponent.PATH_URI));
 			connector.targetPort = connector.new Port(this.targetDataPort.get(DataPort.RTS_NAME),
-					this.targetComponent.get(Component.INSTANCE_NAME), this.targetComponent.get(Component.ID));
-			connector.targetPort.properties = new Properties("COMPONENT_PATH_ID", targetComponent.get(Component.PATH_URI));
+					this.targetComponent.get(RTComponent.INSTANCE_NAME), this.targetComponent.get(RTComponent.ID));
+			connector.targetPort.properties = new Properties("COMPONENT_PATH_ID", targetComponent.get(RTComponent.PATH_URI));
 		return  connector;
 	}
 	/**
