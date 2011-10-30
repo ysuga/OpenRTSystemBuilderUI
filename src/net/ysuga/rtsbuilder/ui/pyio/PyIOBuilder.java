@@ -67,7 +67,7 @@ public class PyIOBuilder {
 	public static String generateCode(String directory, PyIOComponent pyio) {
 		String language = "python";
 		String moduleName = pyio.getModuleName();
-		String moduleDesc = "";
+		String moduleDesc = "This is PyIO Module"; // Error if Description is empty
 		String moduleVendor = pyio.getVendor();
 		String moduleVersion= pyio.getVersion();
 		String moduleCompType = "DataFlowComponent";
@@ -98,7 +98,7 @@ public class PyIOBuilder {
 		File rtcDir = new File(directory + moduleName);
 		int i = 2;
 		while(rtcDir.exists()) {
-			rtcDir = new File(directory  + moduleName + "(" + i + ")");	
+			rtcDir = new File(directory  + moduleName + "_" + i);	
 			i++;
 		}
 		rtcDir.mkdirs();

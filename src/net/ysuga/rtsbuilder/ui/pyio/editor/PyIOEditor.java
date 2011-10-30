@@ -8,6 +8,7 @@
  */
 package net.ysuga.rtsbuilder.ui.pyio.editor;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -41,8 +42,8 @@ public class PyIOEditor extends JFrame {
 		return pyioConfigurationTree;
 	}
 	
-	public JComponent getCurrentEditor() {
-		return tabbedPane;
+	public PyIOEditorPane getCurrentEditor() {
+		return (PyIOEditorPane)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getComponent(0);
 	}
 	
 	private JTabbedPane tabbedPane;
@@ -87,8 +88,10 @@ public class PyIOEditor extends JFrame {
 		setContentPane(hSplitPane);
 		
 		mouseAdapter = new PyIOEditorMouseAdapter(this);
-		this.addMouseListener(mouseAdapter);
-		this.addMouseMotionListener(mouseAdapter);
+		tabbedPane.addMouseListener(mouseAdapter);
+		pyioConfigurationTree.addMouseListener(mouseAdapter);
+		tabbedPane.addMouseMotionListener(mouseAdapter);
+		pyioConfigurationTree.addMouseMotionListener(mouseAdapter);
 
 		
 		super.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -138,10 +141,17 @@ public class PyIOEditor extends JFrame {
 		if(dataPort.getDirection() == DataPort.DIRECTION_IN) {
 			// DataInPort
 			String portName = dataPort.getPlainName();
-			String methodCode = "\tif self._"+portName+"In.isNew():\n\t\tdata = self._"+portName+"In.read()\n\t\tprint data.data";
+			String methodCode = "\n\tif self._"+portName+"In.isNew():\n\t\tdata = self._"+portName+"In.read()\n\t\t#print data.data";
 			
-			PyIOEditorPane selectedPane = (PyIOEditorPane)tabbedPane.getSelectedComponent();
-			
+			JScrollPane c = (JScrollPane)tabbedPane.getSelectedComponent();
+			PyIOEditorPane selectedPane = (PyIOEditorPane)(((JScrollPane)c).getViewport().getComponent(0));
+			selectedPane.addMethodCode(methodCode, point);
+		} else if(dataPort.getDirection() == DataPort.DIRECTION_OUT) {
+			String portName = dataPort.getPlainName();
+			String methodCode = "\n\t#print self._d_"+ portName + ".data\n\tself._"+portName+"Out.write()\n";
+	
+			JScrollPane c = (JScrollPane)tabbedPane.getSelectedComponent();
+			PyIOEditorPane selectedPane = (PyIOEditorPane)(((JScrollPane)c).getViewport().getComponent(0));
 			selectedPane.addMethodCode(methodCode, point);
 		}
 	}

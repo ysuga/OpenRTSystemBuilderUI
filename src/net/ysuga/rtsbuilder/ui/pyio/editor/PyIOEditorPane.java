@@ -53,7 +53,7 @@ public class PyIOEditorPane extends JEditorPane {
 	public void addMethodCode(String methodCode, Point point) {
 		int offset = this.viewToModel(point);
 		StringBuilder strbuf = new StringBuilder( super.getText());
-		strbuf.insert(offset, "Hello\n");
+		strbuf.insert(offset, methodCode);
 		setText(strbuf.toString());
 	
 	}

@@ -214,7 +214,7 @@ public class MainFrame extends JFrame implements Runnable {
 						rtSystemBuilderPanel.downwardSynchronization();
 						rtSystemBuilderPanel.upwardSynchronization();	
 					} catch(Exception e) {
-						logger.warning("Exception(" + e.getClass().getName() + ") occured in MainFrame.run()");
+						//logger.warning("Exception(" + e.getClass().getName() + ") occured in MainFrame.run()");
 					}
 					
 					rtSystemBuilderPanel.repaint();
