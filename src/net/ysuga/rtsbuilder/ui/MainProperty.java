@@ -22,7 +22,8 @@ public class MainProperty extends HashMap<String, String>{
 	final static String PYTHON_PATH = "config.python_path";
 	
 	static private MainProperty instance;
-	static void init() {
+	
+	public static void init() {
 		instance = new MainProperty();
 	}
 	

@@ -23,6 +23,7 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -74,7 +75,7 @@ public class MainFrame extends JFrame implements Runnable {
 		return new RTSystemBuilderPanel();
 	}
 
-	static private MainFrame instance;
+	protected static MainFrame instance;
 	
 	static public MainFrame getInstance() {
 		return instance;
@@ -91,7 +92,7 @@ public class MainFrame extends JFrame implements Runnable {
 	 * 
 	 * @throws HeadlessException
 	 */
-	MainFrame() throws HeadlessException {
+	protected MainFrame() throws HeadlessException {
 		super("RT System Builder");
 		try {
 			getContentPane().setLayout(new BorderLayout());
@@ -104,9 +105,11 @@ public class MainFrame extends JFrame implements Runnable {
 			
 			tabbedView = new JTabbedPane();
 			tabbedView.add("Logger", new LoggerView("net.ysuga"));
+			
 			rtSystemTreeView = new RTSystemTreeView();
+			JComponent panel = createTreePane();
 			horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-					rtSystemTreeView, rtSystemBuilderPanel);
+					panel, rtSystemBuilderPanel);
 			verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
 					horizontalSplitPane, tabbedView);
 			getContentPane().add(BorderLayout.CENTER, verticalSplitPane);
@@ -123,8 +126,8 @@ public class MainFrame extends JFrame implements Runnable {
 			addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent e) {
-					onExit();
 					super.windowClosing(e);
+					onExit();
 				}
 			});
 
@@ -135,9 +138,15 @@ public class MainFrame extends JFrame implements Runnable {
 
 		refreshThread = new Thread(this);
 		autoRefresh = true;
+	}
 
-		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+	/**
+	 * createTreePane
+	 *
+	 * @return
+	 */
+	protected JComponent createTreePane() {
+		return rtSystemTreeView;
 	}
 
 	@Override
@@ -195,16 +204,27 @@ public class MainFrame extends JFrame implements Runnable {
 	@Override
 	public void setVisible(boolean flag) {
 		super.setVisible(flag);
-		refreshThread.start();
+		if(flag) {
+			refreshThread.start();
+		} else {
+			refreshEndFlag = true;
+			try {
+				refreshThread.join();
+			} catch (InterruptedException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+		}
 	}
 
+	private boolean refreshEndFlag;
 	/**
 	 * inherited from Runnable run
 	 */
 	public void run() {
 		System.out.println("RuN");
 		try {
-			while (true) {
+			while (!refreshEndFlag) {
 				
 				if (autoRefresh && this.isVisible()) {
 
@@ -348,7 +368,11 @@ public class MainFrame extends JFrame implements Runnable {
 	}
 
 	private void onExit() {
-
+		int ret = JOptionPane.showConfirmDialog(this, (Object)"Exit?", "Message", JOptionPane.YES_NO_OPTION);
+		if(ret == JOptionPane.YES_OPTION) {
+		this.setVisible(false);
+		System.exit(0);
+		}
 	}
 	
 	private void onActivateAll() {

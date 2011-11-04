@@ -38,8 +38,8 @@ public class RTCTemplateWrapper {
 		}
 
 		List<String> arg = new ArrayList<String>();
-		arg.add("rtc-template");
-		//arg.add("\"C:/Program Files (x86)/OpenRTM-aist/1.1/utils/rtc-template/rtc-template\"");
+		arg.add("python");
+		arg.add("\"C:/Program Files (x86)/OpenRTM-aist/1.1/utils/rtc-template/rtc-template.py\"");
 		arg.add("-b" + language);
 		arg.add("--module-name=" + moduleName);
 		arg.add("--module-desc=\'" + moduleDesc + "\'");
