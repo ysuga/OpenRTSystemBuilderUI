@@ -128,6 +128,60 @@ public class PyIOEditor extends JFrame {
 	}
 
 	PyIOEditorMouseAdapter mouseAdapter;
+	
+	String getBasicDataTypeCodeForInPort(String portName) {
+		String methodCode = "\n" + PyIOComponent.indent + "if self._"+portName+"In.isNew():\n"
+		 + PyIOComponent.indent  + PyIOComponent.indent + "data = self._"+portName+"In.read()\n"
+		 + PyIOComponent.indent  + PyIOComponent.indent + "#print data.data";
+		return methodCode;
+	}
+	
+	String getVelocity2DCodeForInPort(String portName) {
+		String methodCode = "\n" + PyIOComponent.indent + "if self._"+portName+"In.isNew():\n"
+		 + PyIOComponent.indent  + PyIOComponent.indent + "data = self._"+portName+"In.read()\n"
+		 + PyIOComponent.indent  + PyIOComponent.indent + "#print data.data.vx\n"
+		 + PyIOComponent.indent  + PyIOComponent.indent + "#print data.data.vy\n"
+		 + PyIOComponent.indent  + PyIOComponent.indent + "#print data.data.va\n";
+		return methodCode;
+	}
+
+	String getPose2DCodeForInPort(String portName) {
+		String methodCode = "\n" + PyIOComponent.indent + "if self._"+portName+"In.isNew():\n"
+		 + PyIOComponent.indent  + PyIOComponent.indent + "data = self._"+portName+"In.read()\n"
+		 + PyIOComponent.indent  + PyIOComponent.indent + "#print data.data.position.x\n"
+		 + PyIOComponent.indent  + PyIOComponent.indent + "#print data.data.position.y\n"
+		 + PyIOComponent.indent  + PyIOComponent.indent + "#print data.data.heading\n";
+		return methodCode;
+	}
+	
+	String getBasicDataTypeCodeForOutPort(String portName) {
+		String methodCode = "\n" + PyIOComponent.indent +"print self._d_"+ portName + ".data = []\n"
+		 + PyIOComponent.indent +"self._"+portName+"Out.write()\n";
+		
+		return methodCode;
+	}
+	
+	String getVelocity2DCodeForOutPort(String portName) {
+		String methodCode = "\n" + PyIOComponent.indent + "vx = 0.0\n"
+			+ PyIOComponent.indent + "vy = 0.0\n"
+			+ PyIOComponent.indent + "va = 0.0\n"
+			+ PyIOComponent.indent +"self._d_"+ portName + ".data = RTC.Velocity2D(vx, vy, va)\n"
+			+ PyIOComponent.indent +"self._"+portName+"Out.write()\n";
+		return methodCode;
+	}
+
+	String getPose2DCodeForOutPort(String portName) {
+		String methodCode = "\n" + PyIOComponent.indent + "x = 0.0\n"
+			+ PyIOComponent.indent + "y = 0.0\n"
+			+ PyIOComponent.indent + "heading = 0.0\n"
+			+ PyIOComponent.indent + "position = RTC.Point2D(x, y)\n"
+			+ PyIOComponent.indent + "self._d_"+ portName + ".data = RTC.Pose2D(position, heading)\n"
+			+ PyIOComponent.indent + "self._"+portName+"Out.write()\n";
+		
+		return methodCode;
+	}
+	
+	
 	/**
 	 * addConfigurationMedthodOnEditor
 	 *
@@ -138,19 +192,29 @@ public class PyIOEditor extends JFrame {
 			PyIOConfigurationNode selectedNode, Point point) {
 		DataPort dataPort = selectedNode.getDataPort();
 		if(dataPort.getDirection() == DataPort.DIRECTION_IN) {
-			// DataInPort
-			String portName = dataPort.getPlainName();
-			String methodCode = "\n" + PyIOComponent.indent + "if self._"+portName+"In.isNew():\n"
-			 + PyIOComponent.indent  + PyIOComponent.indent + "data = self._"+portName+"In.read()\n"
-			 + PyIOComponent.indent  + PyIOComponent.indent + "#print data.data";
+			
+			String methodCode = null;
+			if(dataPort.getDataType().equals("TimedVelocity2D")) {
+				methodCode = getVelocity2DCodeForInPort(dataPort.getPlainName());
+			} else if(dataPort.getDataType().equals("TimedPose2D")) {
+				methodCode = getPose2DCodeForInPort(dataPort.getPlainName());
+			} else {
+				methodCode = getBasicDataTypeCodeForInPort(dataPort.getPlainName());
+			}
 			
 			JScrollPane c = (JScrollPane)tabbedPane.getSelectedComponent();
 			PyIOEditorPane selectedPane = (PyIOEditorPane)(((JScrollPane)c).getViewport().getComponent(0));
 			selectedPane.addMethodCode(methodCode, point);
 		} else if(dataPort.getDirection() == DataPort.DIRECTION_OUT) {
-			String portName = dataPort.getPlainName();
-			String methodCode = "\n" + PyIOComponent.indent +"#print self._d_"+ portName + ".data\n"
-			 + PyIOComponent.indent +"self._"+portName+"Out.write()\n";
+			String methodCode = null;
+			String dataType = dataPort.getDataType();
+			if(dataType.equals("TimedVelocity2D")) {
+				methodCode = getVelocity2DCodeForOutPort(dataPort.getPlainName());
+			} else if(dataPort.getDataType().equals("TimedPose2D")) {
+				methodCode = getPose2DCodeForOutPort(dataPort.getPlainName());
+			} else {
+				methodCode = getBasicDataTypeCodeForOutPort(dataPort.getPlainName());
+			}
 	
 			JScrollPane c = (JScrollPane)tabbedPane.getSelectedComponent();
 			PyIOEditorPane selectedPane = (PyIOEditorPane)(((JScrollPane)c).getViewport().getComponent(0));

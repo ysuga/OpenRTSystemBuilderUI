@@ -86,8 +86,10 @@ public class PyIOComponentPopupMenu extends ComponentPopupMenu {
 		// Point point = popupMenu.getLocation();
 		if (dialog.doModal() == JOptionPane.OK_OPTION) {
 			try {
-				panel.getRTSystemProfile().componentSet.remove(component
-						.getRTSObject());
+				panel.getRTSystemProfile().removeComponent(component.getRTSObject());
+				
+				//panel.getRTSystemProfile().componentSet.remove(component
+				//		.getRTSObject());
 				RTComponent component = dialog.createComponent();
 				component.setLocation(point);
 				panel.getRTSystemProfile().addComponent(component);
