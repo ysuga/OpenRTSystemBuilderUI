@@ -8,12 +8,10 @@
  */
 package net.ysuga.rtsbuilder.ui.pyio.editor;
 
-import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -28,7 +26,8 @@ import net.ysuga.rtsystem.profile.PyIOComponent;
  *
  */
 public class PyIOEditor extends JFrame {
-
+	
+	
 	private JSplitPane vSplitPane;
 	private JSplitPane hSplitPane;
 	
@@ -141,14 +140,17 @@ public class PyIOEditor extends JFrame {
 		if(dataPort.getDirection() == DataPort.DIRECTION_IN) {
 			// DataInPort
 			String portName = dataPort.getPlainName();
-			String methodCode = "\n\tif self._"+portName+"In.isNew():\n\t\tdata = self._"+portName+"In.read()\n\t\t#print data.data";
+			String methodCode = "\n" + PyIOComponent.indent + "if self._"+portName+"In.isNew():\n"
+			 + PyIOComponent.indent  + PyIOComponent.indent + "data = self._"+portName+"In.read()\n"
+			 + PyIOComponent.indent  + PyIOComponent.indent + "#print data.data";
 			
 			JScrollPane c = (JScrollPane)tabbedPane.getSelectedComponent();
 			PyIOEditorPane selectedPane = (PyIOEditorPane)(((JScrollPane)c).getViewport().getComponent(0));
 			selectedPane.addMethodCode(methodCode, point);
 		} else if(dataPort.getDirection() == DataPort.DIRECTION_OUT) {
 			String portName = dataPort.getPlainName();
-			String methodCode = "\n\t#print self._d_"+ portName + ".data\n\tself._"+portName+"Out.write()\n";
+			String methodCode = "\n" + PyIOComponent.indent +"#print self._d_"+ portName + ".data\n"
+			 + PyIOComponent.indent +"self._"+portName+"Out.write()\n";
 	
 			JScrollPane c = (JScrollPane)tabbedPane.getSelectedComponent();
 			PyIOEditorPane selectedPane = (PyIOEditorPane)(((JScrollPane)c).getViewport().getComponent(0));

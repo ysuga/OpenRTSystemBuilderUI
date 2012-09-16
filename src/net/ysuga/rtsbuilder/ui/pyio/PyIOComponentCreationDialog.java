@@ -310,8 +310,8 @@ public class PyIOComponentCreationDialog extends JDialog {
 				this.executionRateField.getText()));
 		
 		for (DataPort port : dataPortList) {
-			//String remappedName = instanceName + "." + port.getPlainName();
-			String remappedName =  "." + port.getPlainName(); // Port Naming Bug. This will be fixed in 1.1 Release.
+			String remappedName = instanceName + "." + port.getPlainName();
+			//String remappedName =  "." + port.getPlainName(); // Port Naming Bug. This will be fixed in 1.1 Release.
 			port.put(DataPort.RTS_NAME, remappedName);
 			component.dataPortSet.add(port);
 		}

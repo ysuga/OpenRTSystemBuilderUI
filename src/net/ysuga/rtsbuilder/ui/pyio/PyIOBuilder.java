@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import net.ysuga.rtsbuilder.ui.RTCTemplateWrapper;
+import net.ysuga.rtsbuilder.ui.pyio.editor.PyIOEditor;
 import net.ysuga.rtsystem.profile.DataPort;
 import net.ysuga.rtsystem.profile.PyIOComponent;
 import net.ysuga.rtsystem.profile.PythonRTCLauncher;
@@ -31,7 +32,8 @@ import net.ysuga.rtsystem.profile.PythonRTCLauncher;
  *
  */
 public class PyIOBuilder {
-
+	
+	
 	/**
 	 * Constructor
 	 */
@@ -123,7 +125,7 @@ public class PyIOBuilder {
 					BufferedReader sr = new BufferedReader(new StringReader(pyio.getOnExecuteCode()));
 					
 					while((line = sr.readLine()) != null) {
-						bw.write("\t" + line + "\n");
+						bw.write(PyIOComponent.indent + line + "\n");
 					}
 					sr.close();
 				} else {
